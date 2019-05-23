@@ -688,7 +688,7 @@ The inverse formulation may be faster, but I've never needed to care whether it 
 For me the take-home message is to use whatever formulation is clearest to you. Optimize only if necessary. I personally find the above formulation clearest, which is why I use it. But if the inverse formulation is clearer to you, go for it.
 
 ---
-- [ ]	Как лучше всего загрузить UIImage c диска(с кеша)?
+- [x]	Как лучше всего загрузить UIImage c диска(с кеша)?
 
 В iOS присутствует функция кэширования, но прямого доступа к данным в кэше нет. Для получения доступа следует использовать класс NSCache. NSCache — это объекты, которые реализуют протокол NSDiscardableContent. Класс NSCache включает в себя различные политики автоматического удаления, обеспечивающие использование не слишком большого количества памяти системы.
 
@@ -708,23 +708,89 @@ NSCoding это протокол для сериализации и десери
 NSCopying используется для создания копии экземпляра класса со всеми его свойствами Реализуется с помощью метода: -(id)copyWithZone:(NSZone *)zone
 
 ---
-- [ ]	Суть рантайма (Runtime), отправление сообщения? Как работает Runtime?
+- [x]	Суть рантайма (Runtime), отправление сообщения? Как работает Runtime?
+
+Runtime - предоставляет набор функций в системе исполнения для выполнения скомпилированного кода Автоматический поиск переменных/методов. Apple уже реализовало это в виде Key-Value Coding: вы задаете имя, в соответсвии с этим именем получаете переменную или метод. Вы можете делать это и сами, если вас чем-то не устраивает реализация Apple.(прим. переводчика — например, вот так Better key-value observing for Cocoa) Автоматическая регистрация/вызов подклассов. Используя objc_getClassList вы можете получить список классов, уже известных Runtime и, проследив иерархию классов, выяснить, какие подклассы наследуются из данного класса. Это дает вам возможность писать подклассы, которые будут отвечать за специфичиские форматы данных, или что-то в этом роде, и потом дать суперклассу возможность находить их самому, избавив себя от утомительной необходимости регистрировать их все руками. Автоматически вызвывать метод для каждого класса. Это может быть полезно для unit-testing фреймворков и подобного рода вещей. Очень похоже на #2, но с акцентом на поиск возможных методов, а не на иерархию классов Перегрузка методов во время исполнения. Runtime предоставляет вам полный набор инструментов для изменения реализации методов классов, без необходимости изменять что-либо в их исходном коде Bridging Имеея возможность динамически создавать классы и просматривать необходимые поля, вы можете создать мост между Objective-C и другим (достаточно динамичным) языком.
+
+В Objective-C каждый вызов метода транслируется в соответствующий вызов функции objc_msgSend:
+```
+// Вызов метода
+[array insertObject:foo atIndex:1];
+// Соответствующий ему вызов Runtime-функции
+objc_msgSend(array, @selector(insertObject:atIndex:), foo, 1);
+```
+Вызов objc_msgSent инициирует процесс поиска реализации метода в кеш таблице методов класса вверх по иерархии наследования — в суперклассах данного класса. Если же и при поиске по иерархии результат не достигнут, запускается динамический поиск — вызывается один из специальных методов: resolveInstanceMethod или resolveClassMethod. Этот механизм позволяет реализовать Method Swizzling.
+
 ---
-- [ ]	Как добавить свойство в существующий объект с закрытой реализацией? Можно ли это сделать через runtime?
+- [x]	Что представляет собой объект NSError?
+
+NSError is a Cocoa class
+
+An NSError object encapsulates information about an error condition in an extendable, object-oriented manner. It consists of a predefined error domain, a domain-specific error code, and a user info dictionary containing application-specific information.
+
+Error is a Swift protocol which classes, structs and enums can and NSError does conform to.
+
+A type representing an error value that can be thrown.
+
+Any type that declares conformance to the Error protocol can be used to represent an error in Swift’s error handling system. Because the Error protocol has no requirements of its own, you can declare conformance on any custom type you create.
+
+The quoted parts are the subtitle descriptions in the documentation.
+
+The Swift’s error handling system is the pattern to catch errors using try - catch. It requires that the error to be caught is thrown by a method. This pattern is much more versatile than the traditional error handling using NSError instances. If you're planning not to implement try - catch you actually don't need the Error protocol.
+
+
 ---
-- [ ]	Что представляет собой объект NSError?
+- [x]	Что такое динамическая диспетчеризация (Dynamic Dispatch)?
+
+Like many other languages, Swift allows a class to override methods and properties declared in its superclasses. This means that the program has to determine at runtime which method or property is being referred to and then perform an indirect call or indirect access. This technique, called dynamic dispatch, increases language expressivity at the cost of a constant amount of runtime overhead for each indirect usage. In performance sensitive code such overhead is often undesirable. This blog post showcases three ways to improve performance by eliminating such dynamism: final, private, and Whole Module Optimization.
+
+[https://developer.apple.com/swift/blog/?id=27]
+
 ---
-- [ ]	Что такое динамическая диспетчеризация (Dynamic Dispatch)?
+- [x]	Какую проблему решает делегирование?
+
+Основной шаблон проектирования, в котором объект внешне выражает некоторое поведение, но в реальности передаёт ответственность за выполнение этого поведения связанному объекту. Паттерн хорош тем, что нам не нужно хранить всю логику в одном месте и позволяет лучше переиспользовать код. Рассматривайте делегат как обычный обьект, который может выполнять некоторые функции. Например, возьмем NSTableView delegate. Вы хотите отрисовать ячейку таблицы как-то по своему. NSTableView своему делегату пошлет сообщение о том, что он сейчас будет рисовать данную ячейку и делегат уже сам решает что с ней делать (рисовать по своему, не трогать вообще и т.д.). Это, грубо говоря, способ получения и предоставления информации, о которой NSTableView не знает вообще ничего. Или же пример создания собственных делегатов. Представьте, что у вас есть свой класс, который выполняет некоторую функцию. Для выполнения некоторых задач ему необходима информация из другого класса, о котором сейчас не известно ровным счетом ничего, кроме того, что он существует. Тогда создается конструкция вида:
+```
+@interface Class1 {
+	id delegate;
+}
+- (id)delegate;
+- (void)setDelegate:(id)newDelegate;
+
+@implementation Class1
+- (id)delegate {
+	return delegate;
+}
+
+- (void)setDelegate:(id)newDelegate {
+	delegate = newDelegate;
+}
+```
+Как видно из примера — наш делегат, это просто указатель на какой-либо обьект. Ну и предоставлены геттер и сеттер. Для того, чтобы делегат выполнил некоторое действие для нас, где-то внутри нашего Class1 мы пошлем сообщение вида
+```
+[delegate doSomeWork];
+```
+Обьект же, который мы назначили делегатом для данного класса в свою очередь получит это сообщение и начнет выполнять какое-то действие. В принципе и все. Достаточно просто. Делегирование преследует простую цель — сохранять объекты слабо связанными. Таким образом, вы можете отправлять сообщения делегату, не зная какой именно это объект. А сам делегат, при этом, может выполнять разные действия в зависимости от своей реализации. Так что тут мы имеем одно из проявлений полиморфизма. То есть, грубо говоря, делегирующий объект говорит объекту-делегату ЧТО делать, но его не волнует КАК именно это будет сделано. Плюс, делегирование порой может быть более удобной альтернативой наследованию — вместо того, чтобы плодить иерархию классов, вы определяете необходимый интерфейс для делегатов и используете их. 
+
+---
+- []	Как добавить свойство в существующий объект с закрытой реализацией? Можно ли это сделать через runtime?
+
+HELP!
+
 ---
 - [ ]	Сколько различных аннотаций (annotations) доступно в Objective-C?
+
+
 ---
 - [ ]	Пожалуйста, объясните ключевое слово (keyword) final в классе?
----
-- [ ]	Какую проблему решает делегирование?
+
+
 ---
 - [ ]	Почему мы используем шаблон делегата для уведомления о событиях текстового поля?
+
 ---
 - [ ]	What is the difference Delegates and Callbacks?
+
 
 
 #### Memory Management
