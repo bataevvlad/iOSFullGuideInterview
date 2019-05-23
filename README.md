@@ -1,5 +1,11 @@
-# iOSFullGuideInterview
+# iOS Full Guide Interview
 Questions &amp; Answers
+
+##### Обозначения ответов
+
+|   Answer   | 
+| -----------| 
+|    Text    | 
 
 ##### Прогресс:
 - [ ] Вопросы на которые нужно найти ответы. 
@@ -223,7 +229,7 @@ Questions &amp; Answers
 
 - [ ]	Для чего при разработке под iOS использовать POSIX-потоки? pthread_create(&thread, NULL, startTimer, (void *)t);
 
-- [ ]	А чем реально POSIX-потоки лучше чем GCD или NSOperationQueue вместе с NSOperation? Приходилось ри реально использовать POSIX и как в этом были прюсы? Реально, просто интересно.
+- [x]	А чем реально POSIX-потоки лучше чем GCD или NSOperationQueue вместе с NSOperation? Приходилось ри реально использовать POSIX и как в этом были прюсы? Реально, просто интересно.
 
 |    Answer  | 
 | -----------| 
