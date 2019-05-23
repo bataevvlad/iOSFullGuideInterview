@@ -19,8 +19,8 @@ Questions &amp; Answers
 #### Objective-C, Foundation:
 
 ---
-- [x]	Что такое свойство?
-#### Answer:
+- [x] Что такое свойство?
+ 
 ```
 @interface TestClass
 @property NSString *someString;
