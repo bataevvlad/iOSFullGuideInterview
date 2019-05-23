@@ -102,157 +102,157 @@ Questions &amp; Answers
 
 #### Memory Management
 
-•	Объявление свойств c атрибутами: retain, assign, nonatomic, readonly, copy, weak, strong, unsafe_unretained?
+- [ ]	Объявление свойств c атрибутами: retain, assign, nonatomic, readonly, copy, weak, strong, unsafe_unretained?
 
-•	Реализуйте следующие методы: retain/release/autorelease?
+- [ ]	Реализуйте следующие методы: retain/release/autorelease?
 
-•	Почему мы не используем strong для enum свойств?
+- [ ]	Почему мы не используем strong для enum свойств?
 
-•	Как происходит ручное управление памятью - MRC в iOS?
+- [ ]	Как происходит ручное управление памятью - MRC в iOS?
 
-•	autorelease vs release?
+- [ ]	autorelease vs release?
 
-•	Что означает ARC?
+- [ ]	Что означает ARC?
 
-•	Что делать, если проект написан с использованием ARC, а нужно использовать классы сторонней библиотеки написанной без ARC?
+- [ ]	Что делать, если проект написан с использованием ARC, а нужно использовать классы сторонней библиотеки написанной без ARC?
 
-•	Atomic vs nonatomic. Чем отличаются? Как вручную переопределить atomic/nonatomic сеттер в не ARC коде?
+- [ ]	Atomic vs nonatomic. Чем отличаются? Как вручную переопределить atomic/nonatomic сеттер в не ARC коде?
 
-•	Вопрос о циклах в графах владения (retain cycle)?
+- [ ]	Вопрос о циклах в графах владения (retain cycle)?
 
-•	Как использовать self внутри блоков? Приведите пример retain cycle в блоке?
+- [ ]	Как использовать self внутри блоков? Приведите пример retain cycle в блоке?
 
-•	Зачем все свойства ссылающиеся на делегаты strong для ARC и retain для MRC?
+- [ ]	Зачем все свойства ссылающиеся на делегаты strong для ARC и retain для MRC?
 
-•	Что такое autorelease pool?
+- [ ]	Что такое autorelease pool?
 
-•	Что такое runLoop (NSAutoreleasePool), когда он используется? (timers, nsurlconnection ...)?
+- [ ]	Что такое runLoop (NSAutoreleasePool), когда он используется? (timers, nsurlconnection ...)?
 
-•	Как связаны NSRunLoop и NSAutoreleasePool на пальцах?
+- [ ]	Как связаны NSRunLoop и NSAutoreleasePool на пальцах?
 
-•	Как можно заимплементировать autorelease pool на с++?
+- [ ]	Как можно заимплементировать autorelease pool на с++?
 
-•	Если я вызову performSelector:withObject:afterDelay: - объекту пошлется сообщение retain?
+- [ ]	Если я вызову performSelector:withObject:afterDelay: - объекту пошлется сообщение retain?
 
-•	Как происходит обработка memory warning(предупреждение о малом количестве памяти)? Зависит ли обработка от версии iOS, как мы должны их обрабатывать?
+- [ ]	Как происходит обработка memory warning(предупреждение о малом количестве памяти)? Зависит ли обработка от версии iOS, как мы должны их обрабатывать?
 
-•	Напишите простую реализацию NSAutoreleasePool на Objective-C?
+- [ ]	Напишите простую реализацию NSAutoreleasePool на Objective-C?
 
-•	Когда нужно использовать метод retainCount (никогда, почему?)
+- [ ]	Когда нужно использовать метод retainCount (никогда, почему?)
 
-•	Что случится если вы добавите только что созданный объект в Mutable Array, и пошлете ему сообщение release? Что случится если послать сообщение release массиву? Что случится если вы удалите объект из массива и попытаетесь его использовать?
+- [ ]	Что случится если вы добавите только что созданный объект в Mutable Array, и пошлете ему сообщение release? Что случится если послать сообщение release массиву? Что случится если вы удалите объект из массива и попытаетесь его использовать?
 
 - [ ]	С подвохом: как работает сборщик мусора в iOS?
 
-•	Нужно ли ретейнить (посылать сообщение retain) делегаты?
+- [ ]	Нужно ли ретейнить (посылать сообщение retain) делегаты?
 
-•	Для чего используется класс NSCoder?
+- [ ]	Для чего используется класс NSCoder?
 
-•	Опишите правильный способ управления памятью выделяемой под Outlet'ы?
+- [ ]	Опишите правильный способ управления памятью выделяемой под Outlet'ы?
 
 
 
 #### Networking
 
-•	Преимущества и недостатки синхронного и асинхронного соединения?
+- [ ]	Преимущества и недостатки синхронного и асинхронного соединения?
 
-•	Что означает http, tcp?
+- [ ]	Что означает http, tcp?
 
-•	REST, HTTP, JSON. Что это?
+- [ ]	REST, HTTP, JSON. Что это?
 
-•	Какие различия между HEAD, GET, POST, PUT?
+- [ ]	Какие различия между HEAD, GET, POST, PUT?
 
-•	Как загрузить что-то из интернета? В чем разница между синхронными и асинхронными запросами? Небольшое задание. Опишите как загрузить изображение из интернета и отобразить его в ImageView — все это должно происходить после нажатия кнопки.
+- [ ]	Как загрузить что-то из интернета? В чем разница между синхронными и асинхронными запросами? Небольшое задание. Опишите как загрузить изображение из интернета и отобразить его в ImageView — все это должно происходить после нажатия кнопки.
 
-•	Что такое REST (Restful)?
+- [ ]	Что такое REST (Restful)?
 
-•	Какую JSONSerialization имеет ReadingOptions?
+- [ ]	Какую JSONSerialization имеет ReadingOptions?
 
-•	Объясните различия в SOAP и REST?
+- [ ]	Объясните различия в SOAP и REST?
 
 
 #### Multithreading
 
-•	Зачем мы используем synchronized?
+- [ ]	Зачем мы используем synchronized?
 
-•	В чем разница между синхронным и асинхронным таском (задачей)?
+- [ ]	В чем разница между синхронным и асинхронным таском (задачей)?
 
-•	Что такое блоки (blocks)?
+- [ ]	Что такое блоки (blocks)?
 
-•	Какие типы блоков вы знаете (глобальные/локальные, heap/stack)?
+- [ ]	Какие типы блоков вы знаете (глобальные/локальные, heap/stack)?
 
-•	Что такое обработчик завершения (completion handler)?
+- [ ]	Что такое обработчик завершения (completion handler)?
 
-•	Что такое параллелизм (concurrency)?
+- [ ]	Что такое параллелизм (concurrency)?
 
-•	Блокировки читателей-писателей (readers-writers lock)?
+- [ ]	Блокировки читателей-писателей (readers-writers lock)?
 
-•	С подвохом: вопрос о несуществующем параметре atomic, что он означает? Приведите пример кейса с использованием atomic?
+- [ ]	С подвохом: вопрос о несуществующем параметре atomic, что он означает? Приведите пример кейса с использованием atomic?
 
-•	Как многопоточность работает с UIKit?
+- [ ]	Как многопоточность работает с UIKit?
 
-•	Как запустить селектор в (фоновом) потоке?
+- [ ]	Как запустить селектор в (фоновом) потоке?
 
-•	Как запустить поток (thread)? Что первым нужно сделать при запуске потока?
+- [ ]	Как запустить поток (thread)? Что первым нужно сделать при запуске потока?
 
-•	Что такое GCD? Как GCD связан с многопоточностью? Типы queue и queue == thread?
+- [ ]	Что такое GCD? Как GCD связан с многопоточностью? Типы queue и queue == thread?
 
-•	NSOperation vs GCD?
+- [ ]	NSOperation vs GCD?
 
-•	Что такое Dispatch Group?
+- [ ]	Что такое Dispatch Group?
 
-•	NSOperation — NSOperationQueue — NSBlockOperation?
+- [ ]	NSOperation — NSOperationQueue — NSBlockOperation?
 
-•	Что такое deadlock?
+- [ ]	Что такое deadlock?
 
-•	Что такое livelock?
+- [ ]	Что такое livelock?
 
-•	Что такое семафор (semafor)?
+- [ ]	Что такое семафор (semafor)?
 
-•	Что такое мьютекс (mutex)?
+- [ ]	Что такое мьютекс (mutex)?
 
-•	Асинхронность vs многопоточность. Чем отличаются?
+- [ ]	Асинхронность vs многопоточность. Чем отличаются?
 
-•	Какие технологии в iOS возможно использовать для работы с потоками. Преимущества и недостатки.
+- [ ]	Какие технологии в iOS возможно использовать для работы с потоками. Преимущества и недостатки.
 
-•	Как запустить поток? Что первым нужно сделать при запуске потока? (NSAutoreleasePool - пул автоосвобождения) Что такое runLoop, кодга он используется? (timers, nsurlconnection …)
+- [ ]	Как запустить поток? Что первым нужно сделать при запуске потока? (NSAutoreleasePool - пул автоосвобождения) Что такое runLoop, кодга он используется? (timers, nsurlconnection …)
 
-•	Чем отличается dispatch_async от dispatch_sync?
+- [ ]	Чем отличается dispatch_async от dispatch_sync?
 
-•	Для чего при разработке под iOS использовать POSIX-потоки? pthread_create(&thread, NULL, startTimer, (void *)t);
+- [ ]	Для чего при разработке под iOS использовать POSIX-потоки? pthread_create(&thread, NULL, startTimer, (void *)t);
 
-•	А чем реально POSIX-потоки лучше чем GCD или NSOperationQueue вместе с NSOperation? Приходилось ри реально использовать POSIX и как в этом были прюсы? Реально, просто интересно… Use POSIX calls if cross-platform portability is required. If you are writing networking code that runs exclusively in OS X and iOS, you should generally avoid POSIX networking calls, because they are harder to work with than higher-level APIs. However, if you are writing networking code that must be shared with other platforms, you can use the POSIX networking APIs so that you can use the same code everywhere.
+- [ ]	А чем реально POSIX-потоки лучше чем GCD или NSOperationQueue вместе с NSOperation? Приходилось ри реально использовать POSIX и как в этом были прюсы? Реально, просто интересно… Use POSIX calls if cross-platform portability is required. If you are writing networking code that runs exclusively in OS X and iOS, you should generally avoid POSIX networking calls, because they are harder to work with than higher-level APIs. However, if you are writing networking code that must be shared with other platforms, you can use the POSIX networking APIs so that you can use the same code everywhere.
 
 
 #### UIKit
 
-•	Разница между свойствами bounds и frame объекта UIView? Понимание системы координат?
+- [ ]	Разница между свойствами bounds и frame объекта UIView? Понимание системы координат?
 
-•	Цикл жизни View Controller?
+- [ ]	Цикл жизни View Controller?
 
-•	Что такое View (представление) и что такое window и цикл жизни UIView?
+- [ ]	Что такое View (представление) и что такое window и цикл жизни UIView?
 
-•	Что такое Responder Chain (цепочка обязанностей, паттерн chain of responsibility, на примере UI компонентов iOS ), becomeFirstResponder.
+- [ ]	Что такое Responder Chain (цепочка обязанностей, паттерн chain of responsibility, на примере UI компонентов iOS ), becomeFirstResponder.
 
-•	Что означают IBOutlet и IBAction, для чего они нужны, и что значат для препроцессора?
+- [ ]	Что означают IBOutlet и IBAction, для чего они нужны, и что значат для препроцессора?
 
-•	Как работает UITableView? Жизненный цикл UITableView?
+- [ ]	Как работает UITableView? Жизненный цикл UITableView?
 
-•	Что можно сделать если клавиатура при появлении скрывает важную часть интерфейса?
+- [ ]	Что можно сделать если клавиатура при появлении скрывает важную часть интерфейса?
 
-•	Почему мы должны релизить IBOutlet'ты во viewDidUnload?
+- [ ]	Почему мы должны релизить IBOutlet'ты во viewDidUnload?
 
-•	Что такое awakeFromNib, в чем разница между xib и nib файлами?
+- [ ]	Что такое awakeFromNib, в чем разница между xib и nib файлами?
 
-•	Иерархия наследования UIButton.
+- [ ]	Иерархия наследования UIButton.
 
-•	В чем разница CollectionViews & TableViews?
+- [ ]	В чем разница CollectionViews & TableViews?
 
-•	Что такое UIStackView?
+- [ ]	Что такое UIStackView?
 
-•	Какая ваша любимая библиотека визуализации диаграмм (visualize chart library)?
+- [ ]	Какая ваша любимая библиотека визуализации диаграмм (visualize chart library)?
 
-•	Что такое Autolayout?
+- [ ]	Что такое Autolayout?
 
 #### CoreData, Persistency
 
@@ -272,23 +272,23 @@ Questions &amp; Answers
 
 •	Что такое NSFetchRequest?
 
-•	Что такое NSPersistentContainer?
+- [ ]	Что такое NSPersistentContainer?
 
-•	Использовали ли NSFetchedResultsController? Почему?
+- [ ]	Использовали ли NSFetchedResultsController? Почему?
 
-•	Что такое контекст (Managed object context)? Как происходят изменения в NSManagedObjectContext?
+- [ ]	Что такое контекст (Managed object context)? Как происходят изменения в NSManagedObjectContext?
 
-•	Что такое Persistent store coordinator? Зачем нужен NSPersistentStoreCoordinator?
+- [ ]	Что такое Persistent store coordinator? Зачем нужен NSPersistentStoreCoordinator?
 
 - [ ]	Зачем нужно делать двустороннии связи в таблицах?
 
 - [ ]	Что таке Fetched Property и особенности работы с ним по сравнению с обычной связью?
 
-•	Что такое Fault и зачем он нужен?
+- [ ]	Что такое Fault и зачем он нужен?
 
-•	В каких случаях лучше использовать SQLite, а в каких Core Data?
+- [ ]	В каких случаях лучше использовать SQLite, а в каких Core Data?
 
-•	Какие есть нюансы при использовании Core Data в разных потоках? Как синхронизировать данные между потоками(Как синхронизировать контекст)? Синхронизация разных типов NSManagedObjectContext (получение и изменение данных в child контекстах)?
+- [ ]	Какие есть нюансы при использовании Core Data в разных потоках? Как синхронизировать данные между потоками(Как синхронизировать контекст)? Синхронизация разных типов NSManagedObjectContext (получение и изменение данных в child контекстах)?
 
 •	Как использовать СoreData совместно с многопоточностью?
 
