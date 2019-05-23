@@ -48,9 +48,8 @@ NSLog(@"someInt is %d", [testObject someInt]);
 testObject.someString = @"Foo";
 NSLog(@"someInt is %d", testObject.someInt);
 ```
----
-- [x] Как правильно реализовать сеттер для свойства с параметром retain?
 
+- [x] Как правильно реализовать сеттер для свойства с параметром retain?
 ---
 #### Answer:
 Aтрибуты владения (retain/strong/copy/assign/unsafe_unretained/weak). 
