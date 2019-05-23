@@ -21,6 +21,39 @@ Questions &amp; Answers
 
 - [ ]	Что такое свойство?
 
+|   Answer   | 
+| -----------| 
+|   
+```@interface TestClass
+
+@property NSString *someString;
+@property int someInt;
+
+@end
+
+
+@implementation testClass
+
+@end```
+Свойство - это переменная экземпляра, объединенная с автогенераторами и сеттерами. Для свойства, называемого someString , getter и setter называются someString и setSomeString: соответственно. Имя переменной экземпляра, по умолчанию, имя свойства с префиксом подчеркивания (так что переменная экземпляра для someString называется _someString , но это может быть изменено с @synthesize директивы в @implementation разделе:
+```
+@synthesize someString=foo;    //names the instance variable "foo"
+@synthesize someString;    //names it "someString"
+@synthesize someString=_someString;        //names it "_someString"; the default if 
+                                           //there is no @synthesize directive
+```
+Доступ к свойствам можно получить, вызвав геттеры и сеттеры:
+
+```[testObject setSomeString:@"Foo"];
+NSLog(@"someInt is %d", [testObject someInt]);
+```
+Их также можно получить с помощью точечной нотации:
+
+```testObject.someString = @"Foo";
+NSLog(@"someInt is %d", testObject.someInt);
+```
+| 
+
 - [ ] Как правильно реализовать сеттер для свойства с параметром retain?
 
 - [ ]	Директива @synthesize, @dynamic, чем отличаются друг от друга?
