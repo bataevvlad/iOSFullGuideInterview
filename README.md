@@ -18,10 +18,8 @@ Questions &amp; Answers
 
 #### Objective-C, Foundation:
 
-
-- [x]	Что такое свойство?
-
 ---
+- [x]	Что такое свойство?
 #### Answer:
 ```
 @interface TestClass
@@ -49,8 +47,8 @@ testObject.someString = @"Foo";
 NSLog(@"someInt is %d", testObject.someInt);
 ```
 
-- [x] Как правильно реализовать сеттер для свойства с параметром retain?
 ---
+- [x] Как правильно реализовать сеттер для свойства с параметром retain?
 #### Answer:
 Aтрибуты владения (retain/strong/copy/assign/unsafe_unretained/weak). 
 
