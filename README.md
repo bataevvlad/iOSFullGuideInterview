@@ -256,21 +256,21 @@ Questions &amp; Answers
 
 #### CoreData, Persistency
 
-•	Какие есть типы хранилищ (data percistency) и какую стратегию хранения использовать в том или ином случае?
+- [ ]	Какие есть типы хранилищ (data percistency) и какую стратегию хранения использовать в том или ином случае?
 
-•	Какие есть лимиты у JSON/PLIST?
+- [ ]	Какие есть лимиты у JSON/PLIST?
 
-•	Что такое Keychain?
+- [ ]	Что такое Keychain?
 
-•	Какие есть лимиты у SQLite?
+- [ ]	Какие есть лимиты у SQLite?
 
-•	Какие есть преимущества у Realm?
+- [ ]	Какие есть преимущества у Realm?
 
-•	Что такое нормализация данных?
+- [ ]	Что такое нормализация данных?
 
-•	Что такое Core Data?
+- [ ]	Что такое Core Data?
 
-•	Что такое NSFetchRequest?
+- [ ] Что такое NSFetchRequest?
 
 - [ ]	Что такое NSPersistentContainer?
 
@@ -290,187 +290,187 @@ Questions &amp; Answers
 
 - [ ]	Какие есть нюансы при использовании Core Data в разных потоках? Как синхронизировать данные между потоками(Как синхронизировать контекст)? Синхронизация разных типов NSManagedObjectContext (получение и изменение данных в child контекстах)?
 
-•	Как использовать СoreData совместно с многопоточностью?
+- [ ]	Как использовать СoreData совместно с многопоточностью?
 
-•	Что такое NSManagedObjectId? Можем ли мы сохранить его на потом если приложение закроется?
+- [ ]	Что такое NSManagedObjectId? Можем ли мы сохранить его на потом если приложение закроется?
 
-•	Какие типы хранилищ поддерживает CoreData?
+- [ ]	Какие типы хранилищ поддерживает CoreData?
 
-•	Что такое ленивая загрузка (lazy loading)? Что ее связывает с CoreData? Опишите ситуация когда она может быть полезной?
+- [ ]	Что такое ленивая загрузка (lazy loading)? Что ее связывает с CoreData? Опишите ситуация когда она может быть полезной?
 
-•	Составить SQL запрос на выборку всех проектов на которых сидит девелопер с id ==3. (Developers:id,name; Projects:id,name; Developers&Projects:project_id,developer_id)?
+- [ ]	Составить SQL запрос на выборку всех проектов на которых сидит девелопер с id ==3. (Developers:id,name; Projects:id,name; Developers&Projects:project_id,developer_id)?
 
 
 #### CoreAnimation, CoreGraphics
 
-•	Что такое CALayer?
+- [ ]	Что такое CALayer?
 
-•	Чем отличается UIView от CALayer?
+- [ ]	Чем отличается UIView от CALayer?
 
-•	Какие типы CALayer есть?
+- [ ]	Какие типы CALayer есть?
 
-•	Чем отличается UIView based Animation от Core Animation?
+- [ ]	Чем отличается UIView based Animation от Core Animation?
 
-•	Можно ли отследить изменение alpha, через KVO в CALayer?
+- [ ]	Можно ли отследить изменение alpha, через KVO в CALayer?
 
-•	Тайминги в CoreAnimation?
+- [ ]	Тайминги в CoreAnimation?
 
-•	Что такое backing store?
+- [ ]	Что такое backing store?
 
-•	Чем отличаются аффинные преобразования от трехмерных?
+- [ ]	Чем отличаются аффинные преобразования от трехмерных?
 
-•	Нужно ли ретейнить (посылать сообщение retain) делегат для CAAnimation?
+- [ ]	Нужно ли ретейнить (посылать сообщение retain) делегат для CAAnimation?
 
 
 #### iOS Platform
 
-•	Какие бывают состояния (states) у приложения?
+- [ ]	Какие бывают состояния (states) у приложения?
 
-•	Жизненный цикл приложения?
+- [ ]	Жизненный цикл приложения?
 
-•	Каковы самые важные методы делегирования в приложении, с которыми будет сталкиваться разработчик?
+- [ ]	Каковы самые важные методы делегирования в приложении, с которыми будет сталкиваться разработчик?
 
-•	Какого разрешение экранов iphon'ов, и в чем разница между points (точками) и пикселями (pixels)?
+- [ ]	Какого разрешение экранов iphon'ов, и в чем разница между points (точками) и пикселями (pixels)?
 
-•	Что такое responder chain?
+- [ ]	Что такое responder chain?
 
-•	Какие типы нотификаций есть в iOS?
+- [ ]	Какие типы нотификаций есть в iOS?
 
-•	Как работают push нотификации?
+- [ ]	Как работают push нотификации?
 
-•	Какие ограничение есть у платформы iOS?
+- [ ]	Какие ограничение есть у платформы iOS?
 
-•	Какие ограничение есть у платформы tvOS?
+- [ ]	Какие ограничение есть у платформы tvOS?
 
-•	Что такое Code Coverage (покрытие кода)?
+- [ ]	Что такое Code Coverage (покрытие кода)?
 
-•	Что делает подписание кода (code signing)?
+- [ ]	Что делает подписание кода (code signing)?
 
-•	Что такое TVMLKit?
+- [ ]	Что такое TVMLKit?
 
-•	Что такое ABI?
+- [ ]	Что такое ABI?
 
-•	Что такое #keyPath()?
+- [ ]	Что такое #keyPath()?
 
-•	Что IGListKit дает разработчикам?
+- [ ]	Что IGListKit дает разработчикам?
 
-•	Каковы три основных улучшения отладки в Xcode 8?
+- [ ]	Каковы три основных улучшения отладки в Xcode 8?
 
-•	Что такое биткод (bitcode)?
+- [ ]	Что такое биткод (bitcode)?
 
-•	Какие есть ограничения (limits) у SiriKit?
+- [ ]	Какие есть ограничения (limits) у SiriKit?
 
-•	Что нового в iOS 10?
+- [ ]	Что нового в iOS 10?
 
-•	Что такое GraphQL?
+- [ ]	Что такое GraphQL?
 
-•	What is the biggest changes in UserNotifications?
+- [ ]	What is the biggest changes in UserNotifications?
 
-•	Как получить токен устройства (device token)?
+- [ ]	Как получить токен устройства (device token)?
 
-•	Какие ограничения (limits) у Remote Notifications?
+- [ ]	Какие ограничения (limits) у Remote Notifications?
 
 
 #### Architecture
 
-•	Если вам нужно сделать рефакторинг, с чего бы вы начали?
+- [ ]	Если вам нужно сделать рефакторинг, с чего бы вы начали?
 
-•	SOLID?
+- [ ]	SOLID?
 
-•	Что такое protocol oriented programming?
+- [ ]	Что такое protocol oriented programming?
 
-•	Алгоритмическая сложность (big-o notation)?
+- [ ]	Алгоритмическая сложность (big-o notation)?
 
-•	Что такое VIPER архитектура?
+- [ ]	Что такое VIPER архитектура?
 
-•	What is the difference open & public access level?
+- [ ]	What is the difference open & public access level?
 
-•	What is the difference fileprivate & private access level?
+- [ ]	What is the difference fileprivate & private access level?
 
-•	Что такое внутренний доступ (internal access)?
+- [ ]	Что такое внутренний доступ (internal access)?
 
-•	Что такое TDD vs.BDD?
+- [ ]	Что такое TDD vs.BDD?
 
-•	Что такое DDD?
+- [ ]	Что такое DDD?
 
-•	Расскажите о паттерне MVC. Чем отличается пассивная модель от активной?
+- [ ]	Расскажите о паттерне MVC. Чем отличается пассивная модель от активной?
 
-•	Паттерн MVC vs MVP vs MVVM? 
+- [ ]	Паттерн MVC vs MVP vs MVVM? 
   https://habrahabr.ru/post/215605/
 
-•	Принципы DRY?
+- [ ]	Принципы DRY?
 
-•	Принципы KISS?
+- [ ]	Принципы KISS?
 
-•	Что такое IoC?
+- [ ]	Что такое IoC?
 
-•	Где мы используем Dependency Injection?
+- [ ]	Где мы используем Dependency Injection?
 
-•	Когда подходящее время для внедрения зависимостей (dependency injection) в наши проекты?
+- [ ]	Когда подходящее время для внедрения зависимостей (dependency injection) в наши проекты?
 
-•	Explain Priority Inversion and Priority Inheritance?
+- [ ]	Explain Priority Inversion and Priority Inheritance?
 
-•	Clean Architecture?
+- [ ]	Clean Architecture?
 
-•	Каковы главные цели фреймворков (framework)?
+- [ ]	Каковы главные цели фреймворков (framework)?
 
-•	Which of the communication methods allows for a loosely coupled, one-to-many pattern and one-to-one pattern?
+- [ ]	Which of the communication methods allows for a loosely coupled, one-to-many pattern and one-to-one pattern?
 
-•	Игра в разбитые окна?
+- [ ]	Игра в разбитые окна?
 
-•	Объясните разницу между SDK и Framework?
+- [ ]	Объясните разницу между SDK и Framework?
 
-•	В чем недостаток жесткого кодирования? (What is the disadvantage to hard-coding log statements?)
+- [ ]	В чем недостаток жесткого кодирования? (What is the disadvantage to hard-coding log statements?)
 
 
 
 #### Unit Testing
 
-•	Что такое RGR ( Red — Green — Refactor )?
+- [ ]	Что такое RGR ( Red — Green — Refactor )?
 
-•	Объясните “Arrange-Act-Assert”?
+- [ ]	Объясните “Arrange-Act-Assert”?
 
-•	Какие преимущества в написании тестов в приложениях?
+- [ ]	Какие преимущества в написании тестов в приложениях?
 
-•	Опишите Test Driven Development в трех простых правилах?
+- [ ]	Опишите Test Driven Development в трех простых правилах?
 
-•	Что такое TDD?
+- [ ]	Что такое TDD?
 
-•	Что такое Continuous Integration?
+- [ ]	Что такое Continuous Integration?
 
-•	Чем отличается Mock от Stub. (mock - имитация поведения, stub - вводные данные)
+- [ ]	Чем отличается Mock от Stub. (mock - имитация поведения, stub - вводные данные)
 
 
 
 #### Programming
 
-•	Что такое куча (heap) и стэк (stack)? В какой памяти создаются объекты, примитивные типы и блоки?
+- [ ]	Что такое куча (heap) и стэк (stack)? В какой памяти создаются объекты, примитивные типы и блоки?
 
-•	Что такое полиморфизм?
+- [ ]	Что такое полиморфизм?
 
-•	Что такое инкапсуляция? Что такое нарушение инкапсуляции?
+- [ ]	Что такое инкапсуляция? Что такое нарушение инкапсуляции?
 
-•	Чем абстрактный класс отличается от интерфейса?
+- [ ]	Чем абстрактный класс отличается от интерфейса?
 
-•	Что такое сериализация объекта?
+- [ ]	Что такое сериализация объекта?
 
-•	Что такое регулярные выражения (regular expression)?
+- [ ]	Что такое регулярные выражения (regular expression)?
 
-•	Что такое перегрузка операторов (operator overloading)?
+- [ ]	Что такое перегрузка операторов (operator overloading)?
 
-•	Что такое указатель (pointer)?
+- [ ]	Что такое указатель (pointer)?
 
-•	Что такое функция (function)?
+- [ ]	Что такое функция (function)?
 
-•	Как передавать переменную как ссылку?
+- [ ]	Как передавать переменную как ссылку?
 
-•	Что такое класс?
+- [ ]	Что такое класс?
 
-•	Что такое объект?
+- [ ]	Что такое объект?
 
-•	Что такое интерфейс?
+- [ ]	Что такое интерфейс?
 
-•	Когда и почему мы используем объект вместо структур?
+- [ ]	Когда и почему мы используем объект вместо структур?
 
 
 
@@ -496,13 +496,13 @@ Questions &amp; Answers
 
 •	Каковы пять основных практических рекомендаций для улучшения типографического качества (typographic quality) мобильных проектов?
 
-•	Что такое Alamofire?
+- [ ]	Что такое Alamofire?
 
-•	Вы раньше работали в качестве подрядчика?Have you worked as a contractor before?
+- [ ]	Вы раньше работали в качестве подрядчика?Have you worked as a contractor before?
 
-•	Что такое управление зависимостями (Dependency Management)?
+- [ ]	Что такое управление зависимостями (Dependency Management)?
 
-•	Что такое диаграммы классов UML?
+- [ ]	Что такое диаграммы классов UML?
 
 
 
@@ -533,9 +533,9 @@ Questions &amp; Answers
 
 •	Какая команда Git позволяет объединить коммиты?
 
-•	Какая команда Git позволяет нам найти плохие коммиты?
+- [ ]	Какая команда Git позволяет нам найти плохие коммиты?
 
-•	Какая команда Git сохраняет ваш код без коммита?
+- [ ]	Какая команда Git сохраняет ваш код без коммита?
 
 
 
@@ -569,20 +569,20 @@ Questions &amp; Answers
 
 #### Code Puzzels
 
-- Что произойдет здесь (компиляция  + время выполнения): 
+- [ ] Что произойдет здесь (компиляция  + время выполнения): 
 
 ```objc
 NSString *s = [NSNumber numberWithInt:3]; 
 int i = [s intValue];
 ```
 
-- Что не так с этим кодом? Зачем нужны `инициализаторы`?
+- [ ] Что не так с этим кодом? Зачем нужны `инициализаторы`?
 
 ```objc
 [[[SomeClass alloc] init] init];
 ```
 
-- Сработает ли `таймер`? Почему? 
+- [ ] Сработает ли `таймер`? Почему? 
 
 ```objc
 void startTimer(void *threadId) {
@@ -596,7 +596,7 @@ void startTimer(void *threadId) {
 pthread_create(&thread, NULL, startTimer, (void *)t);
 ```
 
-- Какой метод вызовется: класса A или класса B? Как надо изменить код, чтобы вызвался метод класса A?
+- [ ] Какой метод вызовется: класса A или класса B? Как надо изменить код, чтобы вызвался метод класса A?
 
 ```objc
 @interface A : NSObject
@@ -628,14 +628,14 @@ pthread_create(&thread, NULL, startTimer, (void *)t);
 }
 ```
 
-- В каких случаях лучше использовать `strong`, а в каких `copy` для NSString? Почему?
+- [ ] В каких случаях лучше использовать `strong`, а в каких `copy` для NSString? Почему?
 
 ```objc
 @property (nonatomic, strong) NSString *someString;
 @property (nonatomic, copy) NSString *anotherString;
 ```
 
-- Что выведется в консоль? Почему?
+- [ ] Что выведется в консоль? Почему?
 
 ```objc
 - (BOOL)objectsCount {
@@ -656,7 +656,7 @@ pthread_create(&thread, NULL, startTimer, (void *)t);
 }
 ```
 
-- Выведется ли в дебагер «Hello world»? Почему?
+- [ ] Выведется ли в дебагер «Hello world»? Почему?
 
 ```objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -670,7 +670,7 @@ pthread_create(&thread, NULL, startTimer, (void *)t);
 }
 ```
 
-- Что выведется в консоль?
+- [ ] Что выведется в консоль?
 
 ```objc
  dispatch_async(dispatch_get_main_queue(), ^
@@ -684,49 +684,48 @@ pthread_create(&thread, NULL, startTimer, (void *)t);
     NSLog(@"D %d", [object retainCount]);
 ```
 
-- Что произойдет при исполнении следующего кода? 
+- [ ] Что произойдет при исполнении следующего кода? 
 
 ```objc
 Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
 ```
 #### Extended questions
 
-•	Анкета в которой просят оценить свои знания по технологиям по 10 бальной шкале.
+- [ ]	Анкета в которой просят оценить свои знания по технологиям по 10 бальной шкале.
 
-•	Objective-C
+- [ ]	Objective-C
 
-•	C
+- [ ]	C
 
-•	Swift
+- [ ]	Swift
 
-•	iOS Platform
+- [ ]	iOS Platform
 
-•	Architecture
+- [ ]	Architecture
 
-•	Memory Management
+- [ ]	Memory Management
 
-•	Multithreading
+- [ ]	Multithreading
 
-•	UIKit
+- [ ]	UIKit
 
-•	CoreData, Persistency
+- [ ]	CoreData, Persistency
 
-•	Design Patterns
+- [ ]	Design Patterns
 
-•	Unit Testing
+- [ ]	Unit Testing
 
-•	Git
+- [ ]	Git
 
-•	Core Animation
+- [ ]	Core Animation
 
 •	Algorithms and Data Structure
 
-•	Networking
+- [ ]	Networking
 
-•	Swift
+- [ ]	Swift
 
-
-•	Фундаментальные типы и коллекции?
+- [ ]	Фундаментальные типы и коллекции?
 
 •	Аттрибут @UIApplicationMain ?
 
@@ -760,7 +759,7 @@ Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
 
 •	Что означают IBOutlet и IBAction, для чего они нужны, и что значат для препроцессора?
 
-•	Как работает UITableView?
+- [ ]	Как работает UITableView?
 
 •	Что можно сделать если клавиатура при появлении скрывает важную часть интерфейса?
 
@@ -794,9 +793,9 @@ Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
 
 •	Что происходит со способом позже того, как он не нашелся в объекте класса, которому его вызвали?
 
-•	Чем категория отличается от растяжения (extention, неименованная категория)?
+- [ ]	Чем категория отличается от растяжения (extention, неименованная категория)?
 
-•	Дозволено ли добавить ivar в категорию?
+- [ ]	Дозволено ли добавить ivar в категорию?
 
 •	Когда отменнее применять категорию, а когда наследование?
 
@@ -834,7 +833,7 @@ Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
 
 •	Что такое designated initializer?
 
-•	Что такое Run Loop?
+- [ ]	Что такое Run Loop?
 
 •	Чем отличается frame от bounds?
 
@@ -872,7 +871,7 @@ Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
 
 •	Для чего нужны Content Hugging Priority / Content Compression Resistance Priority.
 
-•	В какой момент autolayout изменяет frame у UIView.
+- [ ]	В какой момент autolayout изменяет frame у UIView.
 
 •	Для чего служит reuseIdentifier в экземплярах ячеек.
 
@@ -908,7 +907,7 @@ Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
 
 •	Как получить данные их CoreData. За что отвечает NSFetchRequest, NSPersistentContainer, NSFetchedResultsController?
 
-•	Какие есть нюансы при работе с CoreData в разных потоках?
+- [ ]	Какие есть нюансы при работе с CoreData в разных потоках?
 
 •	Как работают связи в CoreData. Чем отличаются No action, Nullify, Cascade, Deny?
 
