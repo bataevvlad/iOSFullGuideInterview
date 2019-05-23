@@ -569,99 +569,126 @@ Questions &amp; Answers
 
 #### Code Puzzels
 
-•	Что произойдет здесь (компиляция + время выполнения):
+- Что произойдет здесь (компиляция  + время выполнения): 
 
-	NSString *s = [NSNumber numberWithInt:3]; 
-	int i = [s intValue];
-  
-- [ ]	Что не так с этим кодом? Зачем нужны инициализаторы?
+```objc
+NSString *s = [NSNumber numberWithInt:3]; 
+int i = [s intValue];
+```
 
-  [[[SomeClass alloc] init] init];
-  
-- [ ]	Сработает ли таймер? Почему?
+- Что не так с этим кодом? Зачем нужны `инициализаторы`?
 
-	void startTimer(void *threadId) {
-	[NSTimer  scheduleTimerWithTimeInterval:10.0f 
-	target:aTarget 
-	selector:@selector(tick: ) 
-	userInfo:nil
-	repeats:NO];
-	}
-	pthread_create(&thread, NULL, startTimer, (void *)t);
-  
-•	Какой метод вызовется: класса A или класса B? Как надо изменить код, чтобы вызвался метод класса A?
+```objc
+[[[SomeClass alloc] init] init];
+```
 
-	@interface A : NSObject
-	(void)someMethod;
-	@end
+- Сработает ли `таймер`? Почему? 
 
-	@implementation A
-	(void)someMethod {
-	NSLog(@"This is class A");
-	}
-	@end
+```objc
+void startTimer(void *threadId) {
+   [NSTimer  scheduleTimerWithTimeInterval:10.0f 
+      target:aTarget 
+          selector:@selector(tick: ) 
+          userInfo:nil
+           repeats:NO];
+}
 
-	@interface B : A
-	@end
+pthread_create(&thread, NULL, startTimer, (void *)t);
+```
 
-	@implementation B
-	(void)someMethod  {
-	NSLog(@"This is class B");
-	}
-	@end
+- Какой метод вызовется: класса A или класса B? Как надо изменить код, чтобы вызвался метод класса A?
 
-	@interface C : NSObject
-	@end
+```objc
+@interface A : NSObject
+- (void)someMethod;
+@end
 
-	@implementation C
-	(void)method  {
-	A *a = [B new];
-•	[a someMethod];
-•	}
-•	В каких случаях лучше использовать strong, а в каких copy для NSString? Почему?
-•	@property (nonatomic, strong) NSString *someString;
-•	@property (nonatomic, copy) NSString *anotherString;
-•	Что выведется в консоль? Почему?
--	(BOOL)objectsCount {
-•	NSMutableArray *array = [NSMutableArray new];
-•	for (NSInteger i = 0; i < 1024; i++) {
-•	[array addObject:[NSNumber numberWithInt:i]];
-•	}
-•	return array.count;
-•	}
+@implementation A
+- (void)someMethod {
+    NSLog(@"This is class A");
+}
+@end
 
-•	- (void)someMethod {
-•	if ([self objectsCount]) {
-•	NSLog(@"has objects");
-•	}
-•	else {
-•	NSLog(@"no objects");
-•	}
-•	}
-•	Выведется ли в дебагер «Hello world»? Почему?
-•	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-•	{
-•	dispatch_sync(dispatch_get_main_queue(), ^{
-•	NSLog(@"Hello world");
-•	});
+@interface B : A
+@end
 
-•	/* Another implementation */
-•	return YES;
-•	}
-•	Что выведется в консоль?
-•	dispatch_async(dispatch_get_main_queue(), ^
-•	{
-•	NSLog(@"A %d", [object retainCount]);
-•	dispatch_async(dispatch_get_main_queue(), ^{
-•	NSLog(@"B %d", [object retainCount]);
-•	});
-•	NSLog(@"C %d", [object retainCount]);
-•	});
-•	NSLog(@"D %d", [object retainCount]);
-•	Что произойдет при исполнении следующего кода?
-•	Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
+@implementation B
+- (void)someMethod  {
+    NSLog(@"This is class B");
+}
+@end
 
+@interface C : NSObject
+@end
 
+@implementation C
+- (void)method  {
+    A *a = [B new];
+    [a someMethod];
+}
+```
+
+- В каких случаях лучше использовать `strong`, а в каких `copy` для NSString? Почему?
+
+```objc
+@property (nonatomic, strong) NSString *someString;
+@property (nonatomic, copy) NSString *anotherString;
+```
+
+- Что выведется в консоль? Почему?
+
+```objc
+- (BOOL)objectsCount {
+    NSMutableArray *array = [NSMutableArray new];
+    for (NSInteger i = 0; i < 1024; i++) {
+        [array addObject:[NSNumber numberWithInt:i]];
+    }
+    return array.count;
+}
+
+- (void)someMethod {
+    if ([self objectsCount]) {
+        NSLog(@"has objects");
+    }
+    else {
+        NSLog(@"no objects");
+    }
+}
+```
+
+- Выведется ли в дебагер «Hello world»? Почему?
+
+```objc
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        NSLog(@"Hello world");
+    });
+
+   /* Another implementation */
+   return YES;
+}
+```
+
+- Что выведется в консоль?
+
+```objc
+ dispatch_async(dispatch_get_main_queue(), ^
+    {
+        NSLog(@"A %d", [object retainCount]);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"B %d", [object retainCount]);
+        });
+        NSLog(@"C %d", [object retainCount]);
+    });
+    NSLog(@"D %d", [object retainCount]);
+```
+
+- Что произойдет при исполнении следующего кода? 
+
+```objc
+Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
+```
 #### Extended questions
 
 •	Анкета в которой просят оценить свои знания по технологиям по 10 бальной шкале.
