@@ -18,6 +18,7 @@ Questions &amp; Answers
 
 #### Objective-C, Foundation:
 
+
 - [ ]	Что такое свойство?
 
 - [ ] Как правильно реализовать сеттер для свойства с параметром retain?
