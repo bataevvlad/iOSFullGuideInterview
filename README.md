@@ -2358,149 +2358,299 @@ When it comes down to choosing which do use, ask yourself if you're going to wor
 
 #### iOS Platform
 ---
-- [ ]	**Какие бывают состояния (states) у приложения?**
+- [x]	**Какие бывают состояния (states) у приложения?**
+
+Not running
+
+The app has not been launched or was running but was terminated by the system.
+
+Inactive
+
+The app is running in the foreground but is currently not receiving events. (It may be executing other code though.) An app usually stays in this state only briefly as it transitions to a different state.
+
+Active
+
+The app is running in the foreground and is receiving events. This is the normal mode for foreground apps.
+
+Background
+
+The app is in the background and executing code. Most apps enter this state briefly on their way to being suspended. However, an app that requests extra execution time may remain in this state for a period of time. In addition, an app being launched directly into the background enters this state instead of the inactive state. For information about how to execute code while in the background, see Background Execution.
+
+Suspended
+
+The app is in the background but is not executing code. The system moves apps to this state automatically and does not notify them before doing so. While suspended, an app remains in memory but does not execute any code.
+
+When a low-memory condition occurs, the system may purge suspended apps without notice to make more space for the foreground app.
 
 
 ---
-- [ ]	**Жизненный цикл приложения?**
+- [x]	**Жизненный цикл приложения?**
+
+When an iOS app is launched the first thing called is
+
+application: willFinishLaunchingWithOptions:-> Bool. This method is intended for initial application setup. Storyboards have already been loaded at this point but state restoration hasn’t occurred yet.
+
+Launch
+
+application: didFinishLaunchingWithOptions: -> Bool is called next. This callback method is called when the application has finished launching and restored state and can do final initialization such as creating UI.
+applicationWillEnterForeground: is called after application: didFinishLaunchingWithOptions: or if your app becomes active again after receiving a phone call or other system interruption.
+applicationDidBecomeActive: is called after applicationWillEnterForeground: to finish up the transition to the foreground.
+Termination
+
+applicationWillResignActive: is called when the app is about to become inactive (for example, when the phone receives a call or the user hits the Home button).
+applicationDidEnterBackground: is called when your app enters a background state after becoming inactive. You have approximately five seconds to run any tasks you need to back things up in case the app gets terminated later or right after that.
+applicationWillTerminate: is called when your app is about to be purged from memory. Call any final cleanups here.
+Both application: willFinishLaunchingWithOptions: and application: didFinishLaunchingWithOptions: can potentially be launched with options identifying that the app was called to handle a push notification or url or something else. You need to return true if your app can handle the given activity or url.
+
+Knowing your app’s lifecycle is important to properly initialize and set up your app and objects. You don’t have to run everything in application: didFinishLaunchingWithOptions, which often becomes a kitchen sink of setups and initializations of some sort.
+
+I hope, above tutorial will help to clear the concepts of application lifecycle.
 
 
 ---
-- [ ]	**Каковы самые важные методы делегирования в приложении, с которыми будет сталкиваться разработчик?**
+- [x]	**Какого разрешение экранов iphon'ов, и в чем разница между points (точками) и пикселями (pixels)?**
+
+-Pixels (px) - точки на экране. -Points (pt) - плотность точек на экране.
+
+![image](https://github.com/dashvlas/awesome-ios-interview/raw/master/Resources/Articles/Points-Pixels.png)
 
 
 ---
-- [ ]	**Какого разрешение экранов iphon'ов, и в чем разница между points (точками) и пикселями (pixels)?**
+- [x]	**Что такое responder chain?**
 
+Это цепочка по которой проходит событие от отправителя к получателю, от First Responder, по иерархии контроллеров, до root view controller, window object и последнего - app object.
 
----
-- [ ]	**Что такое responder chain?**
-
+UIControl Actions (например, нажатие кнопки)
+User events: (touches, shakes, motion, etc...)
+System events: (low memory, rotation, etc...)
 
 ---
 - [ ]	**Какие типы нотификаций есть в iOS?**
 
 
+
 ---
 - [ ]	**Как работают push нотификации?**
 
+iOS-приложения не могут долгое время находиться в фоновом режиме. В целях сохранения заряда батареи приложениям, работающим в фоне, разрешено выполнять ограниченный набор действий. Вместо того, чтобы беспрерывно проверять события или производить какие-либо действия в фоновом режиме, вы можете создать серверную сторону приложения, которая будет выполнять эти действия. А когда наступит интересующее событие, серверная сторона сможет отправить приложению push-уведомление. Абсолютно любое push-уведомление может выполнять следующие три действия:
+
+- Показать короткое текстовое сообщение.
+- Воспроизвести короткий звуковой сигнал.
+- Установить число на бейдже иконки приложения.
+
+![image](https://github.com/sashakid/ios-guide/raw/master/Images/apns.png)
 
 ---
 - [ ]	**Какие ограничение есть у платформы iOS?**
 
+!!
 
 ---
-- [ ]	**Какие ограничение есть у платформы tvOS?**
+- [x]	**Что такое Code Coverage (покрытие кода)?**
+Покры́тие ко́да — мера, используемая при тестировании программного обеспечения. Она показывает процент исходного кода программы, который был выполнен в процессе тестирования.
+
+Существует несколько различных способов измерения покрытия, основные из них:
+
+- покрытие операторов — каждая ли строка исходного кода была выполнена и протестирована;
+- покрытие условий — каждая ли точка решения (вычисления истинно ли или ложно выражение) была выполнена и протестирована;
+- покрытие путей — все ли возможные пути через заданную часть кода были выполнены и протестированы;
+- покрытие функций — каждая ли функция программы была выполнена;
+- покрытие вход/выход — все ли вызовы функций и возвраты из них были выполнены.
+- покрытие значений параметров — все ли типовые и граничные значения параметров были проверены.
+
+---
+- [x]	**Что делает подписание кода (code signing)?**
+
+Подпись исполняемого кода — это процесс, при котором в непосредственно исполняемые файлы или скрипты встраиваются дополнительно электронные подписи, позволяющие произвести проверку их авторства или целостность, часто с использованием хеш-сумм.
+
+Подпись исполняемого кода помогает решить сразу несколько задач. Так как она генерируется на этапе создания исполняемых файлов, в некоторых случаях она может быть использована для предотвращения конфликтов пространств имён. Похожим образом в файлы может встраиваться информация о системе сборки, использованной при его создании, организации-создателе или авторе. Кроме того, в прикреплённую подпись может быть добавлена информация, заключающая в себе дополнительные мета-данные, такие как атрибуты, торговые марки, версии используемых компонентов
 
 
 ---
-- [ ]	**Что такое Code Coverage (покрытие кода)?**
+- [x]	**Что такое TVMLKit?**
 
-
----
-- [ ]	**Что делает подписание кода (code signing)?**
-
-
----
-- [ ]	**Что такое TVMLKit?**
-
+The TVMLKit framework enables you to evaluate TVMLKit JS and TVML files from within your tvOS app. You can create TVML elements, styles, views, and view controllers through the JavaScript environment.
 
 ---
 - [ ]	**Что такое ABI?**
 
+Двоичный (бинарный) интерфейс приложений (англ. application binary interface, ABI) — набор соглашений для доступа приложения к операционной системе и другим низкоуровневым сервисам, спроектированный для переносимости исполняемого кода между машинами, имеющими совместимые ABI. В отличие от API, который регламентирует совместимость на уровне исходного кода, ABI можно рассматривать как набор правил, позволяющих компоновщику объединять откомпилированные модули компонента без перекомпиляции всего кода, в то же время определяя двоичный интерфейс.
+
+
+Уровни и интерфейсы между ними. API, ABI и архитектура набора команд (ISA)
+Двоичный интерфейс приложений регламентирует:
+
+использование регистров процессора,
+состав и формат системных вызовов и вызовов одного модуля другим;
+формат передачи аргументов и возвращаемого значения при вызове функции.
+Двоичный интерфейс приложений отличается от интерфейса программирования приложений (API). API описывает функциональность, предоставляемую библиотеками: список функций, аргументы функций, возвращаемые значения, возможные исключения, поведение функций.
+
+Двоичный интерфейс приложений описывает функциональность, предоставляемую ядром ОС и архитектурой набора команд (без привилегированных команд). Если интерфейс программирования приложений разных платформ совпадают, код для этих платформ можно компилировать без изменений. Если для разных платформ совпадают и API, и ABI, исполняемые файлы можно переносить на эти платформы без изменений. Если API или ABI платформ отличаются, код требует изменений и повторной компиляции. API не обеспечивает совместимость среды выполнения программы — это задача двоичного интерфейса.
+
 
 ---
-- [ ]	**Что такое #keyPath()?**
+- [x]	**Что такое #keyPath()?**
 
+And, being able to observe changes for any key-path on an ad-hoc basis can yield flexibility and promote abstraction, but the truth remains that it’s far too easy to scrub. Swift 3 smashes this problem to absolute oblivion by enforcing compile time checks on such key-paths.
+
+Using #keyPath(), a static type check will be performed by virtue of the key-path literal string being used as a StaticString or StringLiteralConvertible. At this point, it’s then checked to ensure that it A) is actually a thing that exists and B) is properly exposed to Objective-C.
 
 ---
 - [ ]	**Что IGListKit дает разработчикам?**
+!!
+
+---
+- [x]	**Каковы три основных улучшения отладки в Xcode 8?**
+
+Оперировать существующим значением свойства.
+Добавлять новую строку кода.
 
 
 ---
-- [ ]	**Каковы три основных улучшения отладки в Xcode 8?**
+- [x]	**Что такое биткод (bitcode)?**
 
+. Для начала, вы должны иметь представление о Low Level Virtual Machine (LLVM) — универсальная система трансформации, для преобразования существующего кода в машинный код для различных архитектур.
 
----
-- [ ]	**Что такое биткод (bitcode)?**
-
-
----
-- [ ]	**Какие есть ограничения (limits) у SiriKit?**
-
-
----
-- [ ]	**Что нового в iOS 10?**
+LLVM состоит из двух частей: “фронтенда” и “бэкенда”. Первая — это высокоуровневый язык программирования, на котором вы пишете свое приложение. Например, Objective-C, Swift, Python или Ruby. Вторая часть служит для компиляции этого приложения в машинный код. Преобразование команд в понятный отдельно взятому процессору. При такой архитектуре Bitcode является прослойкой или промежуточным языком, который может повторно скомпилировать приложение в машинный код. Bitcode может преобразовать код в исполняемое приложение, основанное на необходимом наборе инструкций.
 
 
 ---
 - [ ]	**Что такое GraphQL?**
 
+В двух словах, GraphQL это синтаксис, который описывает как запрашивать данные, и, в основном, используется клиентом для загрузки данных с сервера. GraphQL имеет три основные характеристики:
+
+
+- Позволяет клиенту точно указать, какие данные ему нужны.
+- Облегчает агрегацию данных из нескольких источников.
+- Использует систему типов для описания данных.
+
 
 ---
-- [ ]	**What is the biggest changes in UserNotifications?**
+- [x]	**What is the biggest changes in UserNotifications?**
 
-
----
-- [ ]	**Как получить токен устройства (device token)?**
-
+![Все о нотификациях](https://www.freecodecamp.org/news/ios-10-notifications-inshorts-all-in-one-ad727e03983a/)
 
 ---
-- [ ]	**Какие ограничения (limits) у Remote Notifications?**
+- [x]	**Как получить токен устройства (device token)?**
+
+
+```
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken 
+{
+    NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet: [NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSLog(@"content---%@", token);
+} 
+```
+
+---
+- [x]	**Какие ограничения (limits) у Remote Notifications?**
+
+Remote notifications — you use one of your company’s servers to push data to user devices via the Apple Push Notification service (APNs).
+
+Local and push notifications serve different design needs. A local notification is local to an application on an iPhone, iPad, or iPod touch. Push notifications—also known as remote notifications—arrive from outside a device. They originate on a remote server—the application’s provider—and are pushed to applications on devices (via the Apple Push Notification service) when there are messages to see or data to download.
 
 
 
 
 #### Architecture
+---
+- [ ]	**Если вам нужно сделать рефакторинг, с чего бы вы начали?**
 
-- [ ]	Если вам нужно сделать рефакторинг, с чего бы вы начали?
 
-- [ ]	SOLID?
+---
+- [ ]	**SOLID?**
 
-- [ ]	Что такое protocol oriented programming?
 
-- [ ]	Алгоритмическая сложность (big-o notation)?
+---
+- [ ]	**Что такое protocol oriented programming?**
 
-- [ ]	Что такое VIPER архитектура?
 
-- [ ]	What is the difference open & public access level?
+---
+- [ ]	**Алгоритмическая сложность (big-o notation)?**
 
-- [ ]	What is the difference fileprivate & private access level?
 
-- [ ]	Что такое внутренний доступ (internal access)?
+---
+- [ ]	**Что такое VIPER архитектура?**
 
-- [ ]	Что такое TDD vs.BDD?
 
-- [ ]	Что такое DDD?
+---
+- [ ]	**What is the difference open & public access level?**
 
-- [ ]	Расскажите о паттерне MVC. Чем отличается пассивная модель от активной?
 
-- [ ]	Паттерн MVC vs MVP vs MVVM? 
+---
+- [ ]	**What is the difference fileprivate & private access level?**
+
+
+---
+- [ ]	**Что такое внутренний доступ (internal access)?**
+
+
+---
+- [ ]	**Что такое TDD vs.BDD?**
+
+
+---
+- [ ]	**Что такое DDD?**
+
+
+---
+- [ ]	**Расскажите о паттерне MVC. Чем отличается пассивная модель от активной?**
+
+
+---
+- [ ]	**Паттерн MVC vs MVP vs MVVM?** 
   https://habrahabr.ru/post/215605/
+  
+  
+---
+- [ ]	**Принципы DRY?**
 
-- [ ]	Принципы DRY?
 
-- [ ]	Принципы KISS?
+---
+- [ ]	**Принципы KISS?**
 
-- [ ]	Что такое IoC?
 
-- [ ]	Где мы используем Dependency Injection?
+---
+- [ ]	**Что такое IoC?**
 
-- [ ]	Когда подходящее время для внедрения зависимостей (dependency injection) в наши проекты?
 
-- [ ]	Explain Priority Inversion and Priority Inheritance?
+---
+- [ ]	**Где мы используем Dependency Injection?**
 
-- [ ]	Clean Architecture?
 
-- [ ]	Каковы главные цели фреймворков (framework)?
+---
+- [ ]	**Когда подходящее время для внедрения зависимостей (dependency injection) в наши проекты?**
 
-- [ ]	Which of the communication methods allows for a loosely coupled, one-to-many pattern and one-to-one pattern?
 
-- [ ]	Игра в разбитые окна?
+---
+- [ ]	**Explain Priority Inversion and Priority Inheritance?**
 
-- [ ]	Объясните разницу между SDK и Framework?
 
-- [ ]	В чем недостаток жесткого кодирования? (What is the disadvantage to hard-coding log statements?)
+---
+- [ ]	**Clean Architecture?**
+
+
+---
+- [ ]	**Каковы главные цели фреймворков (framework)?**
+
+
+---
+- [ ]	**Which of the communication methods allows for a loosely coupled, one-to-many pattern and one-to-one pattern?**
+
+
+---
+- [ ]	**Игра в разбитые окна?**
+
+
+---
+- [ ]	**Объясните разницу между SDK и Framework?**
+
+
+---
+- [ ]	**В чем недостаток жесткого кодирования? (What is the disadvantage to hard-coding log statements?)**
+
+
 
 
 
