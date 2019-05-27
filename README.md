@@ -2555,120 +2555,350 @@ Local and push notifications serve different design needs. A local notification 
 
 #### Architecture
 ---
-- [ ]	**Если вам нужно сделать рефакторинг, с чего бы вы начали?**
+- [x]	**Если вам нужно сделать рефакторинг, с чего бы вы начали?**
+
+Согласно «Википедии», рефакторинг — это процесс изменения внутренней структуры программы, не затрагивающий её внешнего поведения. Его цель — упростить понимание работы программы.
+
+Итак, что значит «упростить понимание работы программы»? Конкретные цели рефакторинга могут быть такими:
+
+улучшить проект существующего кода;
+найти ошибки;
+сделать код более понятным для других участников команды;
+сделать код менее раздражающим;
+упростить добавление нового кода.
+Также рефакторинг помогает быстрее реализовать программные продукты. Повышается качество — и, соответственно, скорость разработки. Рефакторинг точно необходим, если к вам в команду приходит новый человек, и код в таком виде, в котором он существует, ему не понятен. Это говорит о том, что качество кода неудовлетворительно.
+
+Для рефакторинга, во-первых, напишите хорошие тесты: unit, функциональные или интеграционные. Во-вторых, изменяйте код небольшими итерациями. На каждом шаге прогоняйте тесты. Для качественного рефакторинга полезно знать шаблоны проектирования. Без них будет сложнее проектировать и масштабировать большие проекты.
+
+[https://iiba.ru/basic-principles-and-rules-of-refactoring/]
+
+![image](https://iiba.ru/wp-content/uploads/2016/11/refactoring_mindmap.png)
+
+---
+- [x]	**SOLID?**
+
+SOLID (сокр. от англ. Single responsibility, Open-closed, Liskov substitution, Interface segregation и Dependency inversion) - акроним, введённый Майклом Фэзерсом для первых пяти принципов, названных Робертом Мартином в начале 2000-х, которые означали пять основных принципов ООП и проектирования.
+
+Принцип единственной ответственности
+обозначает, что каждый объект должен иметь одну ответственность и эта ответственность должна быть полностью инкапсулирована в класс. Все его поведения должны быть направлены исключительно на обеспечение этой ответственности. Следующие приёмы позволяют соблюдать принцип единственной ответственности: выделение класса, фасад, DAO.
+
+Принцип открытости / закрытости
+означает, что программные сущности должны быть:
+
+открыты для расширения: поведение сущности может быть расширено, путём создания новых типов сущностей
+закрыты для изменения: в результате расширения поведения сущности, не должны вносится изменения в код, которые эти сущности использует
+Принцип подстановки Барбары Лисков
+даёт определение понятия замещения — если S является подтипом T, тогда объекты типа T в программе могут быть замещены объектами типа S без каких-либо изменений желательных свойств этой программы (например, корректность). Более простыми словами можно сказать, что поведение наследуемых классов не должно противоречить поведению, заданному базовым классом, то есть поведение наследуемых классов должно быть ожидаемым для кода, использующего переменную базового типа.
+
+Принцип разделения интерфейса Роберт Мартин
+определил так: «Клиенты не должны зависеть от методов, которые они не используют». Принцип разделения интерфейсов говорит о том, что слишком «толстые» интерфейсы необходимо разделять на более маленькие и специфические, чтобы клиенты маленьких интерфейсов знали только о методах, которые необходимы им в работе. В итоге, при изменении метода интерфейса не должны меняться клиенты, которые этот метод не используют.
+
+Принцип инверсии зависимостей
+— принцип, используемый для уменьшения зацепления в компьютерных программах. Модули верхних уровней не должны зависеть от модулей нижних уровней. Оба типа модулей должны зависеть от абстракций. Абстракции не должны зависеть от деталей. Детали должны зависеть от абстракций.
 
 
 ---
-- [ ]	**SOLID?**
+- [x]	**Что такое protocol oriented programming?**
+
+[https://habr.com/ru/post/358804/]
+
+---
+- [x]	**Алгоритмическая сложность (big-o notation)?**
+
+Оценка сложности алгоритмов — сложная штука. В быту разработки широко используется базовый вариант Big O notation — подсчёт количества элементарных операций с сокращением констант. Если на пальцевом примере, то сложность функции перебора списка от первого элемента до последнего равна O(n), где n — количество элементов списка.
+
+Фигня в том, что при всех вариантах комплексной оценки, теорий и практик разработчики тяготеют к вышеописанному простейшему, оставляя за кадром нюансы. А оно местами здорово расходится с современной практикой.
 
 
 ---
-- [ ]	**Что такое protocol oriented programming?**
+- [x]	**Что такое VIPER архитектура?**
+
+[https://habr.com/ru/post/358412/]
+
+Отличается тем, что не относится к категории MVC. Вместо привычных 3-х слоев он предлагает 5:
+
+View
+Interactor
+Presenter
+Entity
+Router
+View: отвечает за отображение данных на экране и оповещает Presenter о действиях пользователя. Как правило слоем View в данной модели является ViewController. Пассивен, сам никогда не запрашивает данные, только получает их от презентера. Не содержит в себе логики отображения: принимает от presenter готовые к отображению данные, например, готовые строки текста, и размещает их на себе. События пользователя передает в presenter, который их обрабатывает.
+
+Interactor: содержит бизнес-логику, связанную с получением данных (Entities).
+
+Presenter: получает от View информацию о действиях пользователя и преображает ее в запросы к Router’у, Interactor’у, а также получает данные от Interactor’a, подготавливает их и отправляет View для отображения
+
+Entity: простые объекты данных, по сути модель хранящая информацию и ничего более, они не являются слоем доступа к данным, так как это ответственность Interaptor.
+
+Router: несет ответственность за переходы между VIPER-модулями.
+
+Даже при таком поверхностном осмотре очевидно, что лучшее разделение обязанностей получается за счет большого количества классов с небольшим количеством обязанностей.
 
 
 ---
-- [ ]	**Алгоритмическая сложность (big-o notation)?**
+- [x]	**What is the difference open & public access level?**
+
+Public and Private
+Like private and fileprivate, the public and open access levels have several things in common. Entities that are declared public or open are accessible from the module in which they are defined and from any module that imports the module they are defined in. That makes sense. Right?
+
+What Is the Difference
+The difference between public and access is subtle but important. The open access level was introduced to impose limitations on class inheritance in Swift. This means that the open access level can only be applied to classes and class members, such as properties and methods.
+
+The idea is simple. An open class can be subclassed in the module it is defined in and in modules that import the module in which the class is defined. The same applies to class members. An open method can be overridden by subclasses in the module it is defined in and in modules that import the module in which the method is defined.
+
+This sounds very much like the public access level. That is true for Swift 2. The meaning of the public access level has changed slightly. Classes that are declared public can only be subclassed in the module they are defined in. The same applies to public class members, which can only be overridden by subclasses defined in the module they are defined in.
+
+Why Is This Necessary
+The public and open access levels add an additional layer of access control. Some classes of libraries and frameworks are not designed to be subclassed and doing so may result in unexpected behavior.
+
+The Core Data framework is a fine example. The documentation clearly states that some methods of the NSManagedObject class should not be overridden. If Apple were to apply the public access level to these methods, developers would no longer be able to override these methods in their NSManagedObject subclasses. That is what the public and open access levels are designed for. They protect the integrity of a library or framework.
+
+If a class or class member is marked as open, the maintainer of the library or framework communicates to developers that it is fine to subclass or override the class or class member. That is a very useful statement if you ask me.
+
+What Are the Consequences
+Before the introduction of the open access level, the public access level was the least restrictive access level. This is no longer true for classes and class members. This means that libraries and frameworks need to be updated for Swift 3.
+
+Why is that? Public classes and class members are still accessible by other modules. Great. But public classes can no longer be subclassed and public class members can no longer be overridden. This can dramatically decrease the usefulness of several libraries and frameworks.
+
+More Transparency
+If you maintain a library or framework, the addition of the open access level is an interesting exercise. You are forced to decide whether the classes of your library or framework should be subclassable. And the same applies to class members.
 
 
 ---
-- [ ]	**Что такое VIPER архитектура?**
+- [x]	**What is the difference fileprivate & private access level?**
+
+
+File Private 
+File-private access restricts the use of an entity to its own defining source file. Use file-private access to hide the implementation details of a specific piece of functionality when those details are used within an entire file. 
+Syntax: fileprivate <var type> <variable name> 
+Example: fileprivate class SomeFilePrivateClass {}
+
+
+Private 
+Private access restricts the use of an entity to the enclosing declaration, and to extensions of that declaration that are in the same file. Use private access to hide the implementation details of a specific piece of functionality when those details are used only within a single declaration. 
+Syntax: private <var type> <variable name> 
+Example: private class SomePrivateClass {}
+
+---
+- [x]	**Что такое внутренний доступ (internal access)?**
+
+Internal access enables entities to be used within any source file from their defining module, but not in any source file outside of that module. You typically use internal access when defining an app’s or a framework’s internal structure.
 
 
 ---
-- [ ]	**What is the difference open & public access level?**
+- [x]	**Что такое TDD vs.BDD?**
+TDD (Test Driven Development) и BDD (Behaviour Driven Development)
+
+ TDD — это больше о программировании и тестировании на уровне технической реализации продукта, когда тесты создают сами разработчики. BDD предполагает описание тестировщиком или аналитиком пользовательских сценариев на естественном языке — если можно так выразиться, на языке бизнеса.
+ 
+ BDD — скорее процесс, целью которого является удешевление реализации новых фич.
 
 
 ---
-- [ ]	**What is the difference fileprivate & private access level?**
+- [x]	**Что такое DDD?**
+
+[https://habr.com/ru/post/258693/]
+
+Предметно-ориентированное проектирование (реже проблемно-ориентированное, англ. Domain-driven design, DDD) — это набор принципов и схем, направленных на создание оптимальных систем объектов. Сводится к созданию программных абстракций, которые называются моделями предметных областей. В эти модели входит бизнес-логика, устанавливающая связь между реальными условиями области применения продукта и кодом.
+
+Предметно-ориентированное проектирование не является какой-либо конкретной технологией или методологией. DDD — это набор правил, которые позволяют принимать правильные проектные решения. Данный подход позволяет значительно ускорить процесс проектирования программного обеспечения в незнакомой предметной области.
+
+Подход DDD особо полезен в ситуациях, когда разработчик не является специалистом в области разрабатываемого продукта. К примеру: программист не может знать все области, в которых требуется создать ПО, но с помощью правильного представления структуры, посредством предметно-ориентированного подхода, может без труда спроектировать приложение, основываясь на ключевых моментах и знаниях рабочей области.
 
 
 ---
-- [ ]	**Что такое внутренний доступ (internal access)?**
+- [x]	**Расскажите о паттерне MVC. Чем отличается пассивная модель от активной?**
+
+Концепция MVC позволяет разделить данные, представление и обработку действий пользователя на три отдельных компонента:
+
+Модель (англ. Model). Модель предоставляет знания: данные и методы работы с этими данными, реагирует на запросы, изменяя своё состояние. Не содержит информации, как эти знания можно визуализировать.
+Представление, вид (англ. View). Отвечает за отображение информации (визуализацию). Часто в качестве представления выступает форма (окно) с графическими элементами.
+Контроллер (англ. Controller). Обеспечивает связь между пользователем и системой: контролирует ввод данных пользователем и использует модель и представление для реализации необходимой реакции.
+Важно отметить, что как представление, так и контроллер зависят от модели. Однако модель не зависит ни от представления, ни от контроллера. Тем самым достигается назначение такого разделения: оно позволяет строить модель независимо от визуального представления, а также создавать несколько различных представлений для одной модели.
+
+Активная модель
+Активная модель — модель оповещает представление о том, что в ней произошли изменения, а представления, которые заинтересованы в оповещении, подписываются на эти сообщения. Это позволяет сохранить независимость модели как от контроллера, так и от представления.
+
+Пассивная модель
+Пассивная модель — модель не имеет никаких способов воздействовать на представление или контроллер, и пользуется ими в качестве источника данных для отображения. Все изменения модели отслеживаются контроллером и он же отвечает за перерисовку представления, если это необходимо. Такая модель чаще используется в структурном программировании, так как в этом случае модель представляет просто структуру данных, без методов их обрабатывающих.
 
 
 ---
-- [ ]	**Что такое TDD vs.BDD?**
+- [x]	**Паттерн MVC vs MVP vs MVVM?** 
 
+  [https://habrahabr.ru/post/215605/]
+  
+MVVM
+Этот паттерн удобен в проектах, где используются такие фреймворки, как ReactiveCocoa i RxSwift, в которых есть концепция «связывания данных» — связывание данных с визуальными элементами в двустороннем порядке. В этом случае, использование паттерна MVC является очень неудобным, поскольку привязка данных к представлению (View) — это нарушение принципов MVC.
 
----
-- [ ]	**Что такое DDD?**
+View (ViewController) и Model имеют «посредника» — View Model. View Model — это независимое от UIKit представления View. View Model вызывает изменения в Model и самостоятельно обновляется с уже обновленным Model, и, так как связывание происходит через View, то View обновляется тоже.
 
+Недостатком является то, что «вместо 1000 строк в ViewController может выйти 1000 строк в ViewModel». Также одна из проблем использования фреймворков для «реактивного программирования» — достаточно просто все поломать и может пойти очень много времени на багфиксинг. Кому-то может показаться, что RxSwift, например, упрощает написание кода, но достаточно заглянуть в стек вызовов друга «rx-» метода, чтобы оценить это «упрощение». Можно сюда же добавить проблемы с документацией и постоянные проблемы с автокомплитом в xCode.
 
----
-- [ ]	**Расскажите о паттерне MVC. Чем отличается пассивная модель от активной?**
+MVP
+MVP-паттерн «эволюционировал» из MVC и состоит из таких трех компонентов:
 
+Presenter (независимый посредник UIKit)
+Passive View (UIView и/или UIViewController)
+Model
+Этот паттерн определяет View как получающий UI-события от пользователя и тогда вызывает соответствующий Presenter, если это нужно. Presenter же отвечает за обновление View с новыми данными, полученными из модели.
 
----
-- [ ]	**Паттерн MVC vs MVP vs MVVM?** 
-  https://habrahabr.ru/post/215605/
+Достоинства
+лучшее разделение кода
+хорошо тестируется
+Недостатки
+сравнительно с MVC имеет значительно больше кода
+разработка и поддержка занимают больше времени
   
   
 ---
-- [ ]	**Принципы DRY?**
+- [x]	**Принципы DRY?**
+
+Это принцип разработки программного обеспечения, нацеленный на снижение повторения информации различного рода, особенно в системах со множеством слоёв абстрагирования. Принцип DRY формулируется как: «Каждая часть знания должна иметь единственное, непротиворечивое и авторитетное представление в рамках системы». Он был сформулирован Энди Хантом (англ.) и Дэйвом Томасом (англ.) в их книге The Pragmatic Programmer (англ.). Они применяли этот принцип к «схемам баз данных, планам тестирования, сборкам программного обеспечения, даже к документации». Когда принцип DRY применяется успешно, изменение единственного элемента системы не требует внесения изменений в другие, логически не связанные элементы. Те элементы, которые логически связаны, изменяются предсказуемо и единообразно. Помимо использования методов и функций в коде, Томас и Хант считают необходимым использование генераторов кода, автоматических систем компиляции.
 
 
 ---
 - [ ]	**Принципы KISS?**
 
+Принцип, запрещающий использование более сложных средств, чем необходимо. Изречение часто вызываемое при обсуждении вопросов проектирования с целью парирования нарастающей функциональности и управления сложностью разработки. Возможно, связано с изречением Keep It Short and Simple. Принцип декларирует простоту системы в качестве основной цели и/или ценности. Эрик Рэймонд в своей книге резюмирует философию UNIX как широко используемый принцип KISS.
 
----
-- [ ]	**Что такое IoC?**
-
-
----
-- [ ]	**Где мы используем Dependency Injection?**
-
-
----
-- [ ]	**Когда подходящее время для внедрения зависимостей (dependency injection) в наши проекты?**
+- Разбивайте задачи на подзадачи которые не должны по вашему мнению длиться более 4-12 часов написания кода
+- Разбивайте задачу на множество более маленьких задач, каждая задача должна решаться одним или парой классов
+- Сохраняйте ваши методы маленькими. Каждый метод должен состоять не более чем из 30-40 строк. Каждый метод должен решать одну маленькую задачу, а не множество случаев. Если в вашем методе множество условий, разбейте его на несколько. Это повысит читаемость, позволит легче поддерживать код и быстрее находить ошибки в нём. Вы полюбите улучшать код.
+- Сохраняйте ваши классы маленькими. Здесь применяется та же техника что и с методами.
+- Придумайте решение задачи сначала, потом напишите код. Никогда не поступайте иначе. Многие разработчики придумывают решение задачи во время написания кода и в этом нет ничего плохого. Вы можете делать так и при этом придерживаться выше обозначенного правила. Если вы можете в уме разбивать задачу на более мелкие части, когда вы пишете код, делайте это любыми способами. И не бойтесь переписывать код ещё и ещё и ещё… В счёт не идёт число строк, до тех пор пока вы считаете что можно ещё меньше/ещё лучше.
+- Не бойтесь избавляться от кода. Изменение старого кода и написание нового решения два очень важных момента. Если вы столкнулись с новыми требованиями, или не были оповещены о них ранее, тогда порой лучше придумать новое более изящное решение решающее и старые и новые задачи.
 
 
 ---
-- [ ]	**Explain Priority Inversion and Priority Inheritance?**
+- [x]	**Что такое IoC?**
+
+Inversion of Control (инверсия управления) — это некий абстрактный принцип, набор рекомендаций для написания слабо связанного кода. Суть которого в том, что каждый компонент системы должен быть как можно более изолированным от других, не полагаясь в своей работе на детали конкретной реализации других компонентов.
+
+IoC-контейнер — это какая-то библиотека, фреймворк, программа если хотите, которая позволит вам упростить и автоматизировать написание кода с использованием данного подхода на столько, на сколько это возможно. Их довольно много, пользуйтесь тем, чем вам будет удобно, я продемонстрирую все на примере Ninject.
 
 
 ---
-- [ ]	**Clean Architecture?**
+- [x]	**Где мы используем Dependency Injection?**
+
+Dependency Injection (внедрение зависимостей) — это одна из реализаций принципа IoC (помимо этого есть еще Factory Method, Service Locator).
+
+ IoC, DI — очень хороший инструмент, но и как любой другой механизм использовать его нужно осознанно и к месту. Скажем, одно дело какое-нибудь небольшое консольное приложение, в котором вряд ли что-то будет меняться, или серьезный крупный проект, где пожелания заказчика часто изменчивы и противоречивы.
+Вот и все, буду очень рад услышать ваши комментарии, конструктивные замечания.
+Удачного всем деплоя на продакшене.
 
 
 ---
-- [ ]	**Каковы главные цели фреймворков (framework)?**
+- [x]	**Когда подходящее время для внедрения зависимостей (dependency injection) в наши проекты?**
 
+[https://habr.com/ru/post/434380/]
 
----
-- [ ]	**Which of the communication methods allows for a loosely coupled, one-to-many pattern and one-to-one pattern?**
-
-
----
-- [ ]	**Игра в разбитые окна?**
 
 
 ---
-- [ ]	**Объясните разницу между SDK и Framework?**
+- [x]	**Explain Priority Inversion and Priority Inheritance?**
+
+In one line, Priority Inversion is a problem while Priority Inheritance is a solution. Literally, Priority Inversion means that priority of tasks get inverted and Priority Inheritance means that priority of tasks get inherited. Both of these phenomena happen in priority scheduling. Basically, in Priority Inversion, higher priority task (H) ends up waiting for middle priority task (M) when H is sharing critical section with lower priority task (L) and L is already in critical section. Effectively, H waiting for M results in inverted priority i.e. Priority Inversion. One of the solution for this problem is Priority Inheritance. In Priority Inheritance, when L is in critical section, L inherits priority of H at the time when H starts pending for critical section. By doing so, M doesn’t interrupt L and H doesn’t wait for M to finish. Please note that inheriting of priority is done temporarily i.e. L goes back to its old priority when L comes out of critical section.
 
 
 ---
-- [ ]	**В чем недостаток жесткого кодирования? (What is the disadvantage to hard-coding log statements?)**
+- [x]	**Clean Architecture?**
+
+[https://habr.com/ru/post/269589/]
 
 
+---
+- [x]	**Каковы главные цели фреймворков (framework)?**
+
+Фреймворк (англ. framework — каркас, структура) — программное обеспечение, облегчающее разработку и объединение разных компонентов большого программного проекта. Употребляется также слово «каркас», это набор всевозможных библиотек (инструментов) для быстрой разработки повседневных (рутинных) задач. Чаще всего использует одну из распространенных архитектур приложения (к примеру MVC) для разделения проекта на логические сегменты (модули). Главная цель фреймворка, предоставить программисту удобную среду для проекта с большим и хорошо расширяемым функционалом.
+
+
+---
+- [x]	**Игра в разбитые окна?**
+
+В криминалистике существует интересная теория под названием "Теория разбитых окон" (ТРО). Суть её в том, что разбитое окно, при несвоевременной замене, влечёт за собой целую серию разбитых окон. Более того, серия разбитых окон может быть индикатором повышающегося уровня преступности в заданном регионе. На ум сразу приходит известная всем фраза "Чисто не там, где убирают, а там где не сорят". Согласно этой теории, чисто именно там, где убирают, стимулируя тем самым людей не сорить в будущем. Стоит заметить, что это применимо не только к окнам :) Автолюбителям наверняка знакома эта теория на дорогах, хотя они могут и не догадываться о её существовании. Я не раз замечал большое скопление автомобилей, припаркованных под знаком "Остановка запрещена". Стоит лишь одному остановиться под ним, остальные водители не заставят себя долго ждать. Удивительно как мало внимания дорожная полиция уделяет этому факту. Правонарушения должны своевременно пресекаться.
+
+Но вернёмся всё же в мир разработки программного обеспечения. Удивительно, но и здесь ТРО находит свой отклик. Современный процесс создания ПО находится под жестким прессингом сроков. Бизнесу очень важно как можно раньше поставить продукт на рынок по ряду причин. Отсюда рождаются различные методологии управления вроде Agile, Lean, формируются концепции MVP (Minimum Viable Product). Как следствие, страдает качество кода, он начинает "протухать". С "вонючим кодом" можно жить, более того, практически всегда он есть в той или иной степени, это нормально. Но его нарастающая доля служит одним из первых индикаторов того, что пора "бить во все колокола". Почему? Основываясь на собственном опыте скажу, что программист охотнее "говнокодит" там, где этого "говнокода" предостаточно. И наоборот, человек несколько раз подумает, прежде чем отправлять свой шедевр на код ревью, если в проекте стараются соблюдать чистоту кода. Помимо прочего, "разбитое окно" в коде создаёт ощущение наплевательского отношения к проекту, тем самым порождая чувство безразличности к нему. Зачем пытаться что-то изменить, если всем наплевать?
+
+Чините "разбитые окна" в коде как можно чаще.
+
+
+---
+- [x]	**Объясните разницу между SDK и Framework?**
+
+Library:
+
+A library is a collection of subroutines or classes used to develop software. Libraries contain code and data that provide services to independent programs. This allows code and data to be shared and changed in a modular fashion.
+
+Framework:
+
+A software framework, in computer programming, is an abstraction in which common code providing generic functionality can be selectively overridden or specialized by user code providing specific functionality. Frameworks are similar to software libraries in that they are reuseable abstractions of code wrapped in a well-defined API. Unlike libraries, however, the overall program's flow of control is not dictated by the caller, but by the framework. This inversion of control is the distinguishing feature of software frameworks.
+
+SDK:
+
+A software development kit (SDK or "devkit") is typically a set of development tools that allows a software engineer to create applications for a certain software package, software framework, hardware platform, computer system, video game console, operating system, or similar platform. It may be something as simple as an application programming interface in the form of some files to interface to a particular programming language or include sophisticated hardware to communicate with a certain embedded system. Common tools include debugging aids and other utilities often presented in an IDE. SDKs also frequently include sample code and supporting technical notes or other supporting documentation to help clarify points from the primary reference material.
+
+So:
+
+Library is code that your application calls.
+Framework is an application or library that is almost ready made. You just fill in some blank spots with your own code that the framework calls.
+SDK is a bigger concept as it can include libraries, frameworks, documentation, tools, etc.
+.NET is really more like a platform, not a software framework.
+
+
+---
+- [x]	**В чем недостаток жесткого кодирования? (What is the disadvantage to hard-coding log statements?)**
+
+**Wikipedia:
+
+Hard coding (also hard-coding or hardcoding) refers to the software development practice of embedding what may, perhaps only in retrospect, be considered an input or configuration data directly into the source code of a program or other executable object, or fixed formatting of the data, instead of obtaining that data from external sources or generating data or formatting in the program itself with the given input.
+
+Hard-coding is considered an antipattern.
+
+Considered an anti-pattern, hard coding requires the program's source code to be changed any time the input data or desired format changes, when it might be more convenient to the end user to change the detail by some means outside the program.
+
+Sometimes you cannot avoid it but it should be temporary.
+
+Hard coding is often required. Programmers may not have a dynamic user interface solution for the end user worked out but must still deliver the feature or release the program. This is usually temporary but does resolve, in a short term sense, the pressure to deliver the code. Later, softcoding is done to allow a user to pass on parameters that give the end user a way to modify the results or outcome.
+
+- Hardcoding of messages makes it hard to internationalize a program.
+- Hardcoding paths make it hard to adapt to another location.
+
+
+**The only advantage of hardcoding seems to be fast deliver of code.
 
 
 
 #### Unit Testing
 
-- [ ]	Что такое RGR ( Red — Green — Refactor )?
+---
+- [ ]	**Что такое RGR ( Red — Green — Refactor )?**
 
-- [ ]	Объясните “Arrange-Act-Assert”?
 
-- [ ]	Какие преимущества в написании тестов в приложениях?
+---
+- [ ]	**Объясните “Arrange-Act-Assert”?**
 
-- [ ]	Опишите Test Driven Development в трех простых правилах?
 
-- [ ]	Что такое TDD?
+---
+- [ ]	**Какие преимущества в написании тестов в приложениях?**
 
-- [ ]	Что такое Continuous Integration?
 
-- [ ]	Чем отличается Mock от Stub. (mock - имитация поведения, stub - вводные данные)
+---
+- [ ]	**Опишите Test Driven Development в трех простых правилах?**
+
+
+---
+- [ ]	**Что такое TDD?**
+
+
+---
+- [ ]	**Что такое Continuous Integration?**
+
+
+---
+- [ ]	**Чем отличается Mock от Stub. (mock - имитация поведения, stub - вводные данные)**
+
+
 
 
 
