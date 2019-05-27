@@ -1597,93 +1597,525 @@ dispatch_release(downloadQueue);
 }
 ```
 
----
+
 
 #### Multithreading
+---
+- [x]	**Зачем мы используем synchronized?**
 
-- [ ]	Зачем мы используем synchronized?
+@synchronized гарантирует, что только один поток может выполнять этот код в блоке в любой момент времени.
 
-- [ ]	В чем разница между синхронным и асинхронным таском (задачей)?
+@synchronized Заключает блок кода в мьютекс. Обеспечивает гарантию того, что блок кода и объект блокировки будут доступны только из одного потока в момент времени.
 
-- [ ]	Что такое блоки (blocks)?
+Замки являются одним из наиболее часто используемых инструментов синхронизации. Вы можете использовать замки для защиты критической секции вашего кода, который является сегментом кода, к которому разрешен доступ только одному потоку одновременно. Взаимоисключающая (или мьютекс) блокировка действует как защитный барьер вокруг ресурса. Мьютекс является одним из видов семафора, который предоставляет доступ одновременно только одному потоку. Если мьютекс используется и другой поток пытается получить его, что поток блокируется до тех пор, пока мьютекс не освободится от своего первоначального владельца. Если несколько потоков соперничают за одни и те же мьютексы, только одному будет разрешен к нему доступ.
 
-- [ ]	Какие типы блоков вы знаете (глобальные/локальные, heap/stack)?
 
-- [ ]	Что такое обработчик завершения (completion handler)?
+---
+- [x]	**В чем разница между синхронным и асинхронным таском (задачей)?**
 
-- [ ]	Что такое параллелизм (concurrency)?
+Ниже описаны термины в привязке к GCD, но с небольшими изменениями они верны и для программирования в целом.
 
-- [ ]	Блокировки читателей-писателей (readers-writers lock)?
+Синхронная операция начинает выполнятся сразу при вызове, блокирует поток. Выполняется в текущем потоке. Асинхронная операция ставит задачу в очередь выполнения, продолжает выполнение кода, из которого вызвана задача. Если очередь однопоточная, то задача будет выполнятся после выполнения всех задач, которые уже поставлены в очередь, если много поточная - возможно ее выполнение в другом потоке.
 
-- [ ]	С подвохом: вопрос о несуществующем параметре atomic, что он означает? Приведите пример кейса с использованием atomic?
+Нужно запомнить, что синхронность-асинхронность и однопоточность-многопоточность две пары разных характеристить, и одни не зависят от других (и синхронность и асинхронность могут работать как в однопоточной среде, так и в многопоточной)
 
-- [ ]	Как многопоточность работает с UIKit?
 
-- [ ]	Как запустить селектор в (фоновом) потоке?
+---
+- [x]	**Что такое обработчик завершения (completion handler)? Сравнение с блоками.**
 
-- [ ]	Как запустить поток (thread)? Что первым нужно сделать при запуске потока?
+Blocks:
 
-- [ ]	Что такое GCD? Как GCD связан с многопоточностью? Типы queue и queue == thread?
+Blocks are a language-level feature added to C, Objective-C and C++, which allow you to create distinct segments of code that can be passed around to methods or functions as if they were values. Blocks are Objective-C objects, which means they can be added to collections like NSArray or NSDictionary.
 
-- [ ]	NSOperation vs GCD?
+They can be executed in a later time, and not when the code of the scope they have been implemented is being executed.
+Their usage leads eventually to a much cleaner and tidier code writing, as they can be used instead of delegate methods, written just in one place and not spread to many files.
+Syntax: ReturnType (^blockName)(Parameters) see example:
+```
+int anInteger = 42;
 
-- [ ]	Что такое Dispatch Group?
+void (^testBlock)(void) = ^{
 
-- [ ]	NSOperation — NSOperationQueue — NSBlockOperation?
+    NSLog(@"Integer is: %i", anInteger);   // anInteger outside variables
 
-- [ ]	Что такое deadlock?
+};
 
-- [ ]	Что такое livelock?
+// calling blocks like
+testBlock();
+```
+Block with argument:
+```
+double (^multiplyTwoValues)(double, double) =
 
-- [ ]	Что такое семафор (semafor)?
+                          ^(double firstValue, double secondValue) {
 
-- [ ]	Что такое мьютекс (mutex)?
+                              return firstValue * secondValue;
 
-- [ ]	Асинхронность vs многопоточность. Чем отличаются?
+                          };
+// calling with parameter
+double result = multiplyTwoValues(2,4);
 
-- [ ]	Какие технологии в iOS возможно использовать для работы с потоками. Преимущества и недостатки.
+NSLog(@"The result is %f", result);
+```
+Completion handler:
 
-- [ ]	Как запустить поток? Что первым нужно сделать при запуске потока? (NSAutoreleasePool - пул автоосвобождения) Что такое runLoop, кодга он используется? (timers, nsurlconnection …)
+Whereas completion handler is a way (technique) for implementing callback functionality using blocks.
 
-- [ ]	Чем отличается dispatch_async от dispatch_sync?
+A completion handler is nothing more than a simple block declaration passed as a parameter to a method that needs to make a callback at a later time.
 
-- [ ]	Для чего при разработке под iOS использовать POSIX-потоки? pthread_create(&thread, NULL, startTimer, (void *)t);
+Note: completion handler should always be the last parameter in a method. A method can have as many arguments as you want, but always have the completion handler as the last argument in the parameters list.
 
-- [x]	А чем реально POSIX-потоки лучше чем GCD или NSOperationQueue вместе с NSOperation? Приходилось ри реально использовать POSIX и как в этом были прюсы? Реально, просто интересно.
+Example:
+```
+- (void)beginTaskWithName:(NSString *)name completion:(void(^)(void))callback;
 
-|    Answer  | 
-| -----------| 
-| Use POSIX calls if cross-platform portability is required. If you are writing networking code that runs exclusively in OS X and iOS, you should generally avoid POSIX networking calls, because they are harder to work with than higher-level APIs. However, if you are writing networking code that must be shared with other platforms, you can use the POSIX networking APIs so that you can use the same code everywhere.| 
+// calling
+[self beginTaskWithName:@"MyTask" completion:^{
+
+    NSLog(@"Task completed ..");
+
+}];
+```
+More example with UIKit classes methods.
+```
+[self presentViewController:viewController animated:YES completion:^{
+        NSLog(@"xyz View Controller presented ..");
+
+        // Other code related to view controller presentation...
+    }];
+[UIView animateWithDuration:0.5
+                     animations:^{
+                         // Animation-related code here...
+                         [self.view setAlpha:0.5];
+                     }
+                     completion:^(BOOL finished) {
+                         // Any completion handler related code here...
+
+                         NSLog(@"Animation over..");
+                     }];
+```
+
+---
+- [x]	**Что такое параллелизм (concurrency)?**
+
+Параллелизм это понятие нескольких действий происходящих одновременно. Обе системы и Mac OS X и IOS принимают асинхронный подход к выполнению параллельных задач. Вместо того чтобы создавать потоки напрямую, приложения должны только определить конкретные задачи, а затем позволить системе выполнять их. Позволяя системе управлять потоками, приложения получают уровень масштабируемости, который не представляется возможным при работе с потоками напрямую.
+
+[http://macbug.ru/cocoa/mthread]
+
+---
+- [x]	**Блокировки читателей-писателей (readers-writers lock)?**
+
+The readers–writers problem occurs when multiple threads share a resource (variable or a data structure in memory), and some threads may write, some may read. When multiple threads read from the shared resource simultaneously nothing wrong can happen. But when one thread write — others must wait, otherwise ending up with corrupted data.
+
+I.e. the readers–writers problem allows concurrent read but write is serial.
+
+---
+- [x]	**С подвохом: вопрос о несуществующем параметре atomic, что он означает? Приведите пример кейса с использованием atomic?**
+
+Atomic is indivisible, uninterruptible. Atomic operations are executed at once, without interference. Atomic operation can either succeed or fail without partial or side effects.
+
+We can highlight primitive and high-level atomic operations. High-level is a very broad term and can mean something as complex as database transaction.
+
+Primitive atomic operations are provided by OS or CPU instructions. Some examples are loading, storing, and incrementing a value in memory address. For macOS and iOS common are OSAtomic — group of functions for atomic reading and updating values. This are now deprecated in favour of C11 standard stdatomic.h.
+
+---
+- [x]	**Как многопоточность работает с UIKit?**
+
+One of the most common mistakes even experienced iOS/Mac developers make is accessing parts of UIKit/AppKit on background threads. It’s very easy to make the mistake of setting properties like image from a background thread, because their content is being requested from the network in the background anyway. Apple’s code is performance-optimized and will not warn you if you change properties from different threads. For the most part, UIKit classes should be used only from an application’s main thread. This is particularly true for classes derived from UIResponder or that involve manipulating your application’s user interface in any way.
+
+
+---
+- [x]	**Как запустить селектор в (фоновом) потоке?**
+
+[self performSelectorInBackground:selector withObject:obj];
+
+---
+- [x]	**Как запустить поток (thread)? Что первым нужно сделать при запуске потока?**
+
+[NSThread detachNewThreadSelector:@selector(myThreadMainMethod:) toTarget:self withObject:nil];
+
+NSAutoreleasePool пулы обеспечивают механизм, посредством которого можно отправить объекту "отложенные" release сообщения.Каждый поток в Cocoa приложении сохраняет свой собственный стек объектов NSAutoreleasePool
+
+
+---
+- [x]	**Что такое deadlock?**
+
+Deadlock — ситуация в многозадачной среде, при которой несколько процессов находятся в состоянии бесконечного ожидания ресурсов, захваченных самими этими процессами.
+```
+dispatch_queue_t queue = dispatch_queue_create("my.label", DISPATCH_QUEUE_SERIAL);
+dispatch_async(queue, ^{
+    dispatch_sync(queue, ^{
+        //  outer block is waiting for this inner block to complete,
+        //  inner block won't start before outer block finishes
+        //  => deadlock
+    });
+
+    // this will never be reached
+})
+```
+
+---
+- [x]	**Что такое livelock?**
+
+Livelock частая проблема в асинхронных системах. Потоки почти не блокируются на критических ресурсах. Вместо этого они выполняют свою небольшую неблокируемую задачу и отправляют её в очередь на обработку другими потоками. Может возникнуть ситуация, когда потоки друг другу начинают перекидывать какое-то событие и его обработка зацикливается. Явного бесконечного цикла, как бы, не происходит, но нагрузка на асинхронную систему резко возрастает. В результате чего эти потоки больше ничем не успевают занимаются.
+
+
+---
+- [x]	**Что такое семафор (semafor)?**
+
+Семафор позволяет выполнять какой-либо участок кода одновременно только конкретному количеству потоков. В основе семафора лежит счетчик, который и определяет, можно ли выполнять участок кода текущему потоку или нет. Если счетчик больше нуля — поток выполняет код, в противном случае — нет. В GCD выглядит так: semaphore_create – создание семафора (аналог sem_init)
+semaphore_destroy – удаление, соответственно (аналог sem_destroy)
+semaphore_wait – блокирующее ожидание на семафоре (аналог sem_wait)
+semaphore_signal – освобождение семафора (аналог sem_post)
+
+
+---
+- [x]	**Что такое мьютекс (mutex)?**
+
+Мьютекс является одним из видов семафора, который предоставляет доступ одновременно только одному потоку. Если мьютекс используется и другой поток пытается получить его, что поток блокируется до тех пор, пока мьютекс не освободится от своего первоначального владельца. Если несколько потоков соперничают за одни и те же мьютексы, только одному будет разрешен к нему доступ.
+
+
+---
+- [x]	**Какие технологии в iOS возможно использовать для работы с потоками. Преимущества и недостатки.**
+
+Существует три способа достижения параллелизма в iOS:
+
+Потоки (threads)
+GCD
+NSOperationQueue
+Недостатком потоков является то, что они немасштабируемы для разработчика. Вы должны решить, сколько потоков нужно создать и изменять их число динамически в соответствии с условиями. Кроме того, приложение принимает на себя большую часть затрат, связанных с созданием и встраиванием потоков, которые оно использует.
+
+Поэтому в macOS и iOS предпочтительно использовать асинхронный подход к решению проблемы параллелизма, а не полагаться на потоки.
+
+Одной из технологий асинхронного запуска задач является Grand Central Dispatch (GCD), которая отводит управление потоками до уровня системы. Все, что разработчик должен сделать, это определить выполняемые задачи и добавить их в соответствующую очередь отправки. GCD заботится о создании необходимых потоков и время для работы в этих потоках.
+
+Все dispatch queues представляют собой структуры данных FIFO, поэтому задачи всегда запускаются в том же порядке, в котором они добавлены.
+
+В отличие от dispatch queue очереди операций (NSOperation Queue) не ограничиваются выполнением задач в порядке FIFO и поддерживают создание сложных графиков выполнения заказов для ваших задач.
+
+
+---
+- [x]	**А чем реально POSIX-потоки лучше чем GCD или NSOperationQueue вместе с NSOperation? Приходилось ри реально использовать POSIX и как в этом были прюсы? Реально, просто интересно.**
+
+Use POSIX calls if cross-platform portability is required. If you are writing networking code that runs exclusively in OS X and iOS, you should generally avoid POSIX networking calls, because they are harder to work with than higher-level APIs. However, if you are writing networking code that must be shared with other platforms, you can use the POSIX networking APIs so that you can use the same code everywhere.
+
+---
+- [x]	**Что такое GCD? Как GCD связан с многопоточностью? Типы queue и queue == thread?**
+
+Одной из технологий для запуска задач асинхронно это Grand Central Dispatch (GCD). Эта технология имеет код управления потоками. Вы обычно пишите свои приложения и продвигаете код до системного уровня. Все, что вам нужно сделать, это определить задачи, которые вы хотите выполнить, и добавить их в соответствующую очередь отправки. GCD заботится о создании необходимых потоков и планирования Ваших задач для работы на этих потоках. Поскольку управление потоками является частью системы, GCD обеспечивает целостный подход к управлению и исполнению задач, обеспечивая лучшую эффективность, чем традиционные потоки.
+
+GCD обеспечивает очереди отправки (dispatch queues) для обработки поставленных задач. Эти очереди управляют задачами, которые вы предоставляете для GCD и выполняют эти задачи в порядке их поступления. Это гарантирует, что первая задача, добавленная в очередь является первой задачей в очереди, вторая задача будет добавлена второй и так далее.
+
+Все очереди отправки сами по себе являются потокобезопасными, и вы можете получить к ним доступ из нескольких потоков одновременно. Преимущества GCD очевидны, когда вы четко понимаете, как распределить очередность исполнения для обеспечения потокобезопасности частям вашего собственного кода. Ключом к этому является выбор правильного вида очереди отправки и правильной функции отправки для добавления вашей работы в очередь.
+
+Последовательные очереди (Serial Queues)
+Задачи в последовательных очередях выполняются по одной, каждая последующая задача начинается только после того, как закончится исполнение предыдущей. Кроме того, вы не будете знать, сколько времени пройдет между завершением одной задачи и началом следующей, как показано на рисунке ниже:
+
+ 
+Время выполнения этих задач находится под контролем GCD. Единственное, что вы гарантированно будете знать, это то, что GCD выполняет только одну задачу единовременно, и что он выполняет задачи в порядке их добавления в очередь.
+
+Поскольку невозможно выполнение двух задач в последовательной очереди одновременно, то и нет никакого риска, что они могут получить доступ к одной и той же критической (critical) секции одновременно, что защищает критическую секцию от "условий гонки" только по отношению к этим задачам. Так что, если единственный способ получить доступ к этой критической секции является задача, переданная в эту очередь отправки, то вы можете быть уверены, что критическая секция остается безопасной.
+
+Согласованные Очереди (Concurrent Queues)
+Задачи в согласованных очередях гарантированно будут выполняться в порядке, в котором они были добавлены ... и это все, что вы гарантированно получите! Элементы могут завершаться в любом порядке и у вы не будете знать ни о времени, которое потребуется до начала выполнения следующей задачи, ни количество задач, которые выполняются в текущий момент времени. Опять же, это полностью зависит от GCD.
+
+Обратите внимание, что Задачи 1, 2, 3 быстро завершены, одна за другой, и потребовалось какое-то время для начала выполнения задачи 1 после Задачи 0. Кроме того, Задача 3 начала выполняться после начала выполнения Задачи 2, но закончилось выполнение первым у Задачи 3.
+
+Решение о том, когда начать выполнение задачи полностью лежит на GCD. Если время выполнения одной задачи совпадает с другой, то GCD определяет, должна ли она запуститься на другом ядре, если таковое имеется, или вместо этого устроить переключение контекста на другую задачу.
+
+Для того, чтобы сделать процесс интереснее, GCD предоставляет вам, по крайней мере пять конкретных очередей, чтобы выбрать в пределах каждого типа очереди.
+
+Типы очередей
+Во-первых, система представляет вам специальную последовательную очередь - основную очередь (main queue). Как и в любой последовательной очереди, задачи в этой очереди выполняются по одной. Тем не менее, это гарантирует, что все задачи будут выполняться на главном потоке, который является единственным потоком, которому разрешено обновить ваш пользовательский интерфейс. Только эта очередь используется для отправки сообщений на объекты UIView или для размещения уведомлений.
+
+Система также предоставляет вам несколько согласованных очередей. Эти очереди связаны с их собственным классом QoS (Quality of Service). Классы QoS предназначены, чтобы выразить намерения представленной задачи, так чтобы GCD смог определить, как лучше расставить приоритеты:
+
+QOS_CLASS_USER_INTERACTIVE: Интерактивный пользовательский класс (user interactive) представляет задачи, которые необходимо сделать немедленно. Используйте его для обновления пользовательского интерфейса, обработки событий или небольших работ, которые должны быть выполнены с небольшими задержками. Общий объем работ, сделанный в этом классе во время выполнения вашего приложения, должен быть небольшим.
+QOS_CLASS_USER_INITIATED: Инициированный пользовательский класс представляет задачи, которые инициируются из пользовательского интерфейса и могут быть выполнены асинхронно. Его нужно использовать, когда пользователь ждет немедленных результатов, и для задач, требующих продолжения взаимодействия с пользователем.
+QOS_CLASS_UTILITY: Класс Утилит (utility) представляет длительные  по исполнению задачи, как правило, с видимым для пользователя индикатором загрузки. Используйте его для вычислений, I/O, при работе с сетями, непрерывных каналов передачи данных и подобных друг другу задач. Этот класс является энергоэффективным, к тому же имеет низкое энергопотребление.
+QOS_CLASS_BACKGROUND: Класс background представляет задачи, о которых пользователь может не знать напрямую. Используйте его для предварительной выборки, технического обслуживания и других задач, которые не требуют взаимодействия с пользователем и не требовательны ко времени исполнения.
+Помните, что Apple API-интерфейсы также использует глобальные очереди отправки, так что задачи, которые вы добавляете, не будут единственными в этих очередях.
+
+Наконец, вы можете создать свою собственную последовательную или согласованную очередь. Это означает, что у вас есть по крайней мере пять очередей в вашем распоряжении: главная очередь, четыре глобальные очереди отправки, плюс любые пользовательские очереди, которые вы добавляете сами!
+
+Вот такая картина вырисовывается об "очередях отправки"!
+
+"Искусство" в GCD сводится к выбору правильной функции очереди отправки для добавления работы в очередь. Лучший способ научиться - это поэксперементировать в приведенных ниже примерах, где мы представили некоторые общие рекомендации.
+
+---
+- [x]	**Чем отличается dispatch_async от dispatch_sync?**
+
+Когда это возможно, асинхронное выполнение с использованием dispatch_async и dispatch_async_f функций предпочтительнее, чем синхронный вариант. При добавлении объекта блока или функции в очередь, нет никакого способа узнать, когда этот код будет выполняться. В результате, добавляя блоки или функции асинхронно позволяет запланировать выполнение кода и продолжать делать другую работу из вызывающего потока. Это особенно важно, если вы планировали выполнить задачу из основного потока приложения, возможно, в ответ на некоторые пользовательские события. Хотя вы должны добавлять задачи асинхронно по мере возможности, все же могут быть случаи, когда вам нужно добавить задачу синхронно, чтобы предотвратить гонку условий или другие ошибки синхронизации. В этих случаях можно использовать функции dispatch_sync и dispatch_sync_f для добавления задачи в очередь. Эти функции блокируют текущий поток исполнения до завершения выполнения указанной задачи.
+
+Важно: Вы никогда не должны вызывать функции dispatch_sync или dispatch_sync_f из задачи, которая выполняется в той же очереди, в которой вы планируете переход к функции. Это особенно важно для последовательных очередей, которые гарантированно приведут к deadlock, но также следует избегать одновременных очередей.
+
+Следующий пример показывает, как использовать блочные варианты для отправки задачи асинхронно и синхронно:
+```
+dispatch_queue_t myCustomQueue;
+myCustomQueue = dispatch_queue_create("com.example.MyCustomQueue", NULL);
+
+dispatch_async(myCustomQueue, ^{
+	printf("Сделайте некую работу здесь.\n");
+});
+printf("Первый блок может работать или может не работать.\n");
+
+dispatch_sync(myCustomQueue, ^{
+	printf("Сделайте еще некую работу здесь.\n");
+});
+printf("Оба блока были завершены.\n");
+```
+
+---
+- [x]	**Для чего при разработке под iOS использовать POSIX-потоки? pthread_create(&thread, NULL, startTimer, (void *)t);**
+
+NSThread - это надстройка для pthreads
+[https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/CreatingThreads/CreatingThreads.html]
+
+
+---
+- [x]	**Асинхронность vs многопоточность. Чем отличаются?**
+
+Асинхронность говорит о порядке исполнения кода. Если вызываемая функция не возвращает значение сразу, а отдаёт управление вызывающему коду с обещанием выдать значение позже, то эта функция асинхронная. При этом нет никаких предположений о том, как это значение будет считаться: параллельно или нет. Многопоточность говорит о том, что в физически происходит несколько потоков одновременно.
+
+Многопоточность - каждый поток имеет свой стек и планируется на исполнение отдельно kernel’ом. Поток может общаться с другими потоками. Все потоки находятся в общем адресном пространстве приложения и делят одну и ту же виртуальную память и имеют те же права доступа что и процесс приложения. Асинхронность Асинхронные событиямя выполняются независимо от основного потока в неблокирующем режиме, что позволяет основному потоку программы продолжить обработку. Т/е/ результат работы функции приходит не сразу после вызова, а когда-нибудь потом.
+
+в многопоточной реализации бывают случаи когда потоки простаивают в ожидании входных данных тем самым расходуя общие ресурсы асинхронность позволяет всегда занять процессор какими то действиями ставя все события в очередь
+
+---
+- [x]	**NSOperation vs GCD?**
+
+While NSOperation and NSOperationQueue have been available since iOS 2, Grand Central Dispatch, GCD for short, was introduced in iOS 4 and OS X 10.6 Snow Leopard. Both technologies are designed to encapsulate units of work and dispatch them for execution. Because these APIs serve the same goal, developers are often confused when to use which.
+
+Before I answer the questions when to use which API, I would like to discuss the key difference between NSOperation and Grand Central Dispatch.
+
+What Sets Them Apart
+Comparing NSOperation and Grand Central Dispatch is comparing apples and oranges. Why is that? With the introduction of Grand Central Dispatch, Apple refactored NSOperation to work on top of Grand Central Dispatch. The NSOperation API is a higher level abstraction of Grand Central Dispatch. If you are using NSOperation, then you are implicitly using Grand Central Dispatch.
+
+Grand Central Dispatch is a low-level C API that interacts directly with Unix level of the system. NSOperation is an Objective-C API and that brings some overhead with it. Instances of NSOperation need to be allocated before they can be used and deallocated when they are no longer needed. Even though this is a highly optimized process, it is inherently slower than Grand Central Dispatch, which operates at a lower level.
+
+Benefits of NSOperation
+Since NSOperation is built on top of Grand Central Dispatch, you may be wondering what NSOperation offers that Grand Central Dispatch doesn't. There are several compelling benefits that make NSOperation an interesting choice for a number of use cases.
+
+Dependencies
+The NSOperation API provides support for dependencies. This is a powerful concept that enables developers to execute tasks in a specific order. An operation is ready when every dependency has finished executing.
+
+Observable
+The NSOperation and NSOperationQueue classes have a number of properties that can be observed, using KVO (Key Value Observing). This is another important benefit if you want to monitor the state of an operation or operation queue.
+
+Pause, Cancel, Resume
+Operations can be paused, resumed, and cancelled. Once you dispatch a task using Grand Central Dispatch, you no longer have control or insight into the execution of that task. The NSOperation API is more flexible in that respect, giving the developer control over the operation's life cycle.
+
+Control
+The NSOperationQueue also adds a number of benefits to the mix. For example, you can specify the maximum number of queued operations that can run simultaneously. This makes it easy to control how many operations run at the same time or to create a serial operation queue.
+
+When to Use Which
+In general, Apple advises developers to use the highest level of abstraction that is available. If we apply this advice, then the NSOperation API should be your first choice.
+
+But why does Apple advise developers to use the highest level of abstraction? With every release, Apple tweaks and optimizes the frameworks and libraries that power the operating system. This usually involves changes affecting low(er)-level APIs. Even though APIs built on top of these low-level APIs change less frequently, they still benefit from the improvements Apple makes to the APIs they are built on.
+
+Great. But when do you use which technology? Should you avoid Grand Central Dispatch only because it is a low-level API? You can use Grand Central Dispatch whenever and wherever you like. Many developers swear by Grand Central Dispatch, but most developers use a combination NSOperation and Grand Central Dispatch.
+
+When to Use NSOperation
+The NSOperation API is great for encapsulating well-defined blocks of functionality. You could, for example, use an NSOperation subclass to encapsulate the login sequence of an application.
+
+Dependency management is the icing on the cake. An operation can have dependencies to other operations and that is a powerful feature Grand Central Dispatch lacks. If you need to perform several tasks in a specific order, then operations are a good solution.
+
+You can go overboard with operations if you are creating dozens of operations in a short timeframe. This can lead to performance problems due to the overhead inherent to the NSOperation API.
+
+When to Use Grand Central Dispatch
+Grand Central Dispatch is ideal if you just need to dispatch a block of code to a serial or concurrent queue. If you don't want to go through the hassle of creating an NSOperation subclass for a trivial task, then Grand Central Dispatch is a great alternative. Another benefit of Grand Central Dispatch is that you can keep related code together. Take a look at the following example.
+
+let dataTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+```
+    // Process Response
+    ...
+
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        // Update User Interface
+        ...
+    })
+})
+```
+In the completion handler of the data task, we process the response and update the user interface by dispatching a closure (or block) to the main queue. This is necessary because we don't know which thread the completion handler is executed on and it most likely is a background thread.
+
+This example illustrates how related code is grouped together. It also highlights the elegance of the Grand Central Dispatch syntax. Asynchronously dispatching a task to the main queue requires only a few lines of code.
+
+NSBlockOperation
+The NSOperation class should never be used as is. It is meant to be subclassed. Foundation also provides a concrete subclass that is ready to be used, NSBlockOperation. This class combines the best of both worlds, you can use closures and still benefit from the NSOperation API.
+```
+let operation = NSBlockOperation(block: { () -> Void in
+    // Do Something
+    ...
+})
+
+operationQueue.addOperation(operation)
+```
+Some consider the NSBlockOperation redundant because you might as well use Grand Central Dispatch instead. I don't agree with this view. As the above example illustrates, the NSBlockOperation combines the elegance of closures and the benefits of operations. There is nothing wrong with NSBlockOperation in my opinion.
+
+Conclusion
+In this article, we explored the pros and cons of Grand Central Dispatch and the NSOperation API. I hope it is clear that you don't need to choose one or the other. A combination of both technologies is the right choice for most projects. Try it out and refactor if necessary.
+
+**Кратко**
+
+GCD is a low-level C-based API that enables very simple use of a task-based concurrency model. NSOperation and NSOperationQueue are Objective-C classes that do a similar thing. NSOperation was introduced first, but as of 10.6 and iOS 4, NSOperationQueue and friends are internally implemented using GCD.
+
+In general, you should use the highest level of abstraction that suits your needs. This means that you should usually use NSOperationQueue instead of GCD, unless you need to do something that NSOperationQueue doesn't support.
+
+Note that NSOperationQueue isn't a "dumbed-down" version of GCD; in fact, there are many things that you can do very simply with NSOperationQueue that take a lot of work with pure GCD. (Examples: bandwidth-constrained queues that only run N operations at a time; establishing dependencies between operations. Both very simple with NSOperation, very difficult with GCD.) Apple's done the hard work of leveraging GCD to create a very nice object-friendly API with NSOperation. Take advantage of their work unless you have a reason not to.
+
+Caveat: On the other hand, if you really just need to send off a block, and don't need any of the additional functionality that NSOperationQueue provides, there's nothing wrong with using GCD. Just be sure it's the right tool for the job.
+
+
+---
+- [x]	**Что такое Dispatch Group?**
+
+это объекты, позволяющие объединять задачи в группы для последующего объединения (joining). Задачи могут быть добавлены в очередь как члены группы, и затем объект группы может быть использован для ожидания завершения всех задач группы.
+
+
+---
+- [x]	**NSOperation — NSOperationQueue — NSBlockOperation?**
+
+В отличие от dispatch queue очереди операций (NSOperation Queue) не ограничиваются выполнением задач в порядке FIFO и поддерживают создание сложных графиков выполнения заказов для ваших задач.
+
+Operation queues are a Cocoa abstraction of the queue model exposed by GCD. While GCD offers more low-level control, operation queues implement several convenient features on top of it, which often makes it the best and safest choice for application developers. The NSOperationQueue class has two different types of queues: the main queue and custom queues. The main queue runs on the main thread, and custom queues are processed in the background. In any case, the tasks which are processed by these queues are represented as subclasses of NSOperation. Whereas dispatch queues always execute tasks in first-in, first-out order, operation queues take other factors into account when determining the execution order of tasks. Because the NSOperation class is essentially an abstract base class, you typically define custom subclasses to perform your tasks. However, the Foundation framework does include some concrete subclasses that you can create and use as is to perform tasks.
+
+Плюсы
+
+Можно для каждой очереди настраивать приоритет и количество одновременно выполняющихся операций. NSOperationQueue самостоятельно создает и поддерживает пул потоков, в которых исполняются NSOperation. Так же NSOperation предоставляет возможность отменять операции, приостанавливать всю очередь, запускать ее снова и много чего прочего.
+
+[https://blog.justdev.org/lessons/prostoj-primer-nsblockoperation/]
+
+---
+- [ ]	**Как запустить поток? Что первым нужно сделать при запуске потока? (NSAutoreleasePool - пул автоосвобождения) Что такое runLoop, кодга он используется? (timers, nsurlconnection …)**
+
+!!!
+
 
 #### UIKit
 
-- [ ]	Разница между свойствами bounds и frame объекта UIView? Понимание системы координат?
+---
+- [x]	**Разница между свойствами bounds и frame объекта UIView? Понимание системы координат?**
 
-- [ ]	Цикл жизни View Controller?
+frame – это прямоугольник описываемый положением location(x, y) и размерами size (width, height) вьюхи относительно ее superview в которой она содержится.
+bounds – это прямоугольник описываемый положением location(x, y) и размерами size (width, height) вьюхи относительно ее собственной системы координат (0, 0).
 
-- [ ]	Что такое View (представление) и что такое window и цикл жизни UIView?
+[https://github.com/dashvlas/awesome-ios-interview/raw/master/Resources/Articles/Frame-Bounds.png]
 
-- [ ]	Что такое Responder Chain (цепочка обязанностей, паттерн chain of responsibility, на примере UI компонентов iOS ), becomeFirstResponder.
+---
+- [x]	**Цикл жизни UIViewController?**
 
-- [ ]	Что означают IBOutlet и IBAction, для чего они нужны, и что значат для препроцессора?
+[https://habr.com/ru/post/129557/]
 
-- [ ]	Как работает UITableView? Жизненный цикл UITableView?
+---
+- [x]	**Что такое View (представление) и что такое window и цикл жизни UIView?**
 
-- [ ]	Что можно сделать если клавиатура при появлении скрывает важную часть интерфейса?
+[https://www.techotopia.com/index.php/Understanding_iPhone_Views,_Windows_and_the_View_Hierarchy]
 
-- [ ]	Почему мы должны релизить IBOutlet'ты во viewDidUnload?
+Window экземпляр класса UIWindow занимается отображеним видимой View иерархии. Является корневым представлением. UIView - это основной обьект для взаимодействует с пользователем. Основные задачи: 1 Layout and subview management 2 Drawing and animation 3 Event handling
 
-- [ ]	Что такое awakeFromNib, в чем разница между xib и nib файлами?
 
-- [ ]	Иерархия наследования UIButton.
+---
+- [x]	**Что такое Responder Chain (цепочка обязанностей, паттерн chain of responsibility, на примере UI компонентов iOS ), becomeFirstResponder.**
 
-- [ ]	В чем разница CollectionViews & TableViews?
+Это цепочка по которой проходит событие от отправителя к получателю, от First Responder, по иерархии контроллеров, до root view controller, window object и последнего - app object.
+```
+-UIControl Actions(например, нажатие кнопки)
+-User events: (touches, shakes, motion, etc...)
+-System events: (low memory, rotation, etc...)
+```
 
-- [ ]	Что такое UIStackView?
+---
+- [x]	**Что означают IBOutlet и IBAction, для чего они нужны, и что значат для препроцессора?**
 
-- [ ]	Какая ваша любимая библиотека визуализации диаграмм (visualize chart library)?
+[https://nshipster.com/ibaction-iboutlet-iboutletcollection/]
 
-- [ ]	Что такое Autolayout?
+Используются для Interface Builder
+
+
+---
+- [x]	**Как работает UITableView? Жизненный цикл UITableView?**
+
+Ячейки таблицы, которые больше не отображаются на экране, не выбрасываются из памяти. Их можно использовать повторно, указав идентификатор в процессе инициализации. Когда ячейка, отмеченная для повторного использования, пропадает с экрана, UITableView помещает ее в очередь для повторного использования в дальнейшем. Когда dataSource запрашивает у UITableView новую ячейку и указывает идентификатор, UITableView сначала проверяет очередь ячеек для повторного использования на предмет наличия необходимой. Если ячейка не была обнаружена, то создается новая, которая затем передается dataSource'у.
+
+UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+
+
+---
+- [x]	**Что можно сделать если клавиатура при появлении скрывает важную часть интерфейса?**
+
+Сдвинуть интерфейс. 
+
+Например, поменять значение константы констрейта и перерисовать лайаут, или просто обновить фреймы, если не используется лайаут. 
+
+---
+- [x]	**Что такое awakeFromNib, в чем разница между xib и nib файлами?**
+
+NSNibAwaking Protocol Reference (informal protocol)
+
+Prepares the receiver for service after it has been loaded from an Interface Builder archive, or nib file.
+
+- (void)awakeFromNib;
+
+An awakeFromNib message is sent to each object loaded from the archive, but only if it can respond to the message, and only after all the objects in the archive have been loaded and initialized. When an object receives an awakeFromNib message, it is guaranteed to have all its outlet instance variables set.
+
+Note: During Interface Builder’s test mode, this method is also sent to objects instantiated from loaded palettes, which include executable code for the objects. It is not sent to objects created using the Classes display of the nib file window in Interface Builder. An example of how you might use awakeFromNib is shown below. Suppose your nib file has two custom views that must be positioned relative to each other at runtime. Trying to position them at initialization time might fail because the other view might not yet be unarchived and initialized yet. However, you can position both of them in the nib file owner’s awakeFromNib method. 
+
+xib - новый формат IB(с версии 3) nib который хранится в текстовом файле, что делает его более подходящим для хранения в системах контроля версий
+
+---
+- [x]	**Иерархия наследования UIButton.**
+
+UIButton -> UIControl -> UIView -> UIResponder ->NSObject. UIButton inherits UIControl ,UIControl inherits UIView ,UIView inherits   UIResponder and  UIResponder inherits NSObject.
+
+
+---
+- [x]	**В чем разница CollectionViews & TableViews?**
+
+UICollectionView can do pretty much everything that UiTableView can do. The collection view is much more robust in terms of layout features and other things like animations. The way to set up both views with cell registration, dequeuing the cells, specifying size and heights are pretty much the same.
+
+UITableView is the base mechanism for displaying sets of data on iOS. It’s a simple list, which displays single-dimensional rows of data. It’s smooth because of cell reuse and other magic.
+UICollectionView is the model for displaying multidimensional data — it was introduced just a year or two ago with iOS 6, I believe.
+The main difference between the two is how you want to display 1000 items. UITableViewhas a couple of styles of cells stacked one over the other. You should not try to bend it to do any other kind of things too much complex than that kind of layout.
+
+UICollectionView is a much more powerful set of classes that allow modifying almost every aspect of how your data will appear on the screen, especially its layout but also other things. You can see UITableViews in almost every iOS application (for example Contacts or iPod), while UICollectionViews are more difficult to see (the grid in Photos, but also the over flow in iPod).
+
+Advantages of UICollectionView
+The biggest advantage of using collection view is the ability to scroll horizontally. If you have seen the AppStore app it has horizontal views which concept is used in many applications. If you want multiple columns in your apps then UICollectionView is the best way to do it. It is possible to have multiple columns in table view as well but it gets really messy since you are dealing with and array to display data in a table view. 
+UICollectionView Supports complex layouts. Apple provides you with something called UICollectionViewDelegateFlowLayout which provides you the flow of left and right as well as up and down. 
+UICollectionView can more easily implement drag and drop functionality which lets you manipulates things on the screen itself. If you try this with UITableView obviously you can’t do that. 
+UICollectionView supports custom animations based on different layouts which again cannot be done in UITableView. Advantages of collection view are endless but these are some major ones for me.
+
+Disadvantages of UICollectionView
+Major disadvantages of using UICollectionView is auto sizing of your cells, we don not really need auto sizing that much so it’s not that big of a problem. It takes a lot of trial and error to get auto sizing to work correctly ( not saying I’m good at it ). UITableView wins here as all you have to do is return UITableView automatic dimensions for the height of your row in each one of your cells.
+
+So to sum this up, if you need something standard like most table views in iOS I will choose the UITableView, but if you need more control over your layout, go with UICollectionView.
+
+
+---
+- [x]	**Что такое UIStackView?**
+
+В прямом смысле, UIStackView не является графическим элементом и не обладает визуальным представлением, поэтому изменение таких его свойств, как backgroundColor, не имеет эффекта. Единственная задача UIStackView — организация расположения объектов. По сути, он лишь выступает контейнером для других UIView (в том числе и UIStackView, что бывает полезно), которые размещает по определенным правилам.
+
+Основные настройки призводятся свойствами:
+
+axis — ось (направление) расположения элементов, значение UILayoutConstraintAxis. По умолчанию — Horizontal.
+alignment — выравнивание по оси, перпендикулярной axis, значение UIStackViewAlignment. По умолчанию — Fill.
+distribution — распределение объектов вдоль оси axis, значение UIStackViewDistribution. По умолчанию — Fill.
+spacing — расстояние (для некоторых distribution минимальное) между объектами. По умолчанию — 0.
+Любое из этих свойств можно изменять динамически, при этом объекты передвинутся автоматически.
+
+Также, разработчики постарались, добавив в Interface Builder практически все настройки UIStackView, поэтому работать там с ним очень удобно, особенно, если необходимо привязывать значения к сайзклассам.
+
+---
+- [x]	**Какая ваша любимая библиотека визуализации диаграмм (visualize chart library)?**
+
+Core-plot.
+
+---
+- [x]	**Что такое Autolayout?**
+
+Auto Layout занимается динамическим вычислением позиции и размера всех view на основе constraints — правил заданных для того или иного view. Самый большой и очевидный плюс для разработчика в использовании Auto Layout в том, что исчезает необходимость в подгонке размеров приложения под определенные устройства. Auto Layout изменяет интерфейс в зависимости от внешних или внутренних изменений. Минус Auto Layout состоит в том, что вычисление конкретных значений сводится к задаче решения системы линейных уравнений, поэтому добавление каждого нового констрейнта ощутимо увеличивает сложность расчета конкретных значений.
+
+
 
 #### CoreData, Persistency
 
