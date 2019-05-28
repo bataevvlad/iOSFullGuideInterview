@@ -4321,7 +4321,7 @@ nil is just shorthand for the None case
 
 
 
-#### MOAR QUESTIONS
+#### NEW QUESTIONS
 
 ---
 - [ ] **В словарях (NSDictionary) , что нужно сделать чтобы решить эту проблему? (разница между глубоким и поверхностным копированием).**
