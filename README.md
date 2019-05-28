@@ -3416,91 +3416,417 @@ private override init() {}
 
 #### Git
 ---
-- [ ]	**В чем разница между SVN и Git?**
+- [x]	**В чем разница между SVN и Git?**
+
+1. GIT распределяется, а SVN - нет. Другими словами, если есть несколько разработчиков работающих с репозиторием у каждого на локальной машине будет ПОЛНАЯ копия этого репозитория. Разумеется есть и где-то и центральная машина, с которой можно клонировать репозиторий. Это напоминает SVN. Основной плюс в том, что если вдруг у вас нет доступа к интернету, сохраняется возможность работать с репозиторием. Потом только один раз сделать синхронизацию и все остальные разработчики получат поолную историю.
+
+2. GIT сохраняет метаданные изменений, а SVN целые файлы. Это экономит место и время.
+
+3. Система создания branches, versions и прочее в GIT и SVN отличаются значительно. В GIT проще переключатся с ветки на ветку, делать merge между ними. В общем GIT я нахожу немного проще и удобнее, но бывают конечно иногда сложности. Но где их не бывает?
+
+Разумеется есть гораздо больше отличий, но я перечислил те, которые чаще всего встречаются при работе с репозиториями и на МОЙ взгляд наиболее важные.
 
 
 ---
-- [ ]	**Какая команда Git позволяет объединить коммиты?**
+- [x]	**Какая команда Git позволяет объединить коммиты?**
+
+Чтобы объединить два или более последних коммитов в один используется команда git rebase с ключом -i (интерактивный режим).
+
+Для примера объединим последние 2 коммита в один. Выполняем команду:
+```
+git rebase -i HEAD~2
+```
+Откроется текстовый редактор, в котором первые две строки соответствуют последним двум коммитам:
+```
+pick ab37583 Added feature 1.
+pick 3ab2b83 Added feature 2.
+
+# Rebase e46d230..3ab2b83 onto e46d230 (2 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+...
+```
+В начале каждой строки стоит слово pick. Вам необходимо изменить слово pick на squash или просто на букву s у второй строки. Это означает, что данный коммит будет объединен с предыдущим коммитом. Итак, замените pick на s, у вас должно получиться что-то вроде:
+```
+pick ab37583 Added feature 1.
+s 3ab2b83 Added feature 2.
+...
+```
+Сохраните изменения и закройте редактор.
 
 
 ---
-- [ ]	**Какая команда Git позволяет нам найти плохие коммиты?**
+- [x]	**Какая команда Git позволяет нам найти плохие коммиты?**
+
+Пример команды: git bisect
+
+Команда git bisect использует принцип «разделяй и властвуй» для поиска плохого коммита в большой истории изменений.
+
+Представьте, что вы вернулись из продолжительного отпуска. Вы забираете последнюю версию проекта из удалённого репозитория и обнаруживаете, что та фича, над которой вы работали перед самым отпуском, теперь не работает. Вы проверяете последний сделанный вами коммит — там всё работает. Однако за время вашего отпуска в проекте появились сотни других коммитов, и вы представления не имеете, который из них оказался плохим и сломал вашу фичу.
+
+Так что же делает git bisect?
+
+После того, как вы укажете коммит, в котором ничего не работает («плохой» коммит) и коммит, в котором всё работает («хороший» коммит), git bisect разделит все коммиты, которые располагаются между ними пополам, переключится в новую (безымянную) ветку на этом срединном коммите и позволит вам проверить, работает ли в нём ваша фича.
+
+Предположим, в этом «срединный» коммите всё работает. Тогда вы говорите об этом гиту с помощью команды git bisect good и у вас останется только половина всех коммитов для поиска того самого, поломавшего всё.
+
+После выполнения этой команды Git разделит оставшиеся коммиты пополам и снова переключится в безымянную ветку на новом срединном коммите, позволив вам протестировать работоспособность вашей фичи. И так далее, пока вы не обнаружите тот самый «плохой» коммит.
 
 
 ---
-- [ ]	**Какая команда Git сохраняет ваш код без коммита?**
+- [x]	**Какая команда Git сохраняет ваш код без коммита?**
 
+git stash
+It will save any uncommitted stuff in a special area where you can get it back later using
 
+git stash apply
+You can see what is in the stash with
+
+git stash list
 
 
 
 #### Additional
+---
+- [x]	**Что такое Б-деревья (B-Trees)?**
 
-- [ ]	Что такое Б-деревья (B-Trees)?
+ структура данных, дерево поиска. С точки зрения внешнего логического представления, сбалансированное, сильно ветвистое дерево. Часто используется для хранения данных во внешней памяти.
 
-- [ ]	С: Как представлены Си-структуры (CGRect, CGSize, CGPoint) в Objective-C?
+Использование B-деревьев впервые было предложено Р. Бэйером (англ. R. Bayer) и Э. МакКрейтом (англ. E. McCreight) в 1970 году.
+
+Сбалансированность означает, что длина любых двух путей от корня до листьев различается не более, чем на единицу.
+
+Ветвистость дерева — это свойство каждого узла дерева ссылаться на большое число узлов-потомков.
+
+С точки зрения физической организации B-дерево представляется как мультисписочная структура страниц памяти, то есть каждому узлу дерева соответствует блок памяти (страница). Внутренние и листовые страницы обычно имеют разную структуру.
+
+
+---
+- [x]	**С: Как представлены Си-структуры (CGRect, CGSize, CGPoint) в Objective-C?**
+
+CGRect – структура, которая содержит переменные для хранения координат и размеров. frame – это прямоугольник описываемый положением location(x, y) и размерами size (width, height) вьюхи относительно ее superview в которой оа содержится. bounds – это прямоугольник описываемый положением location(x, y) и размерами size (width, height) вьюхи относительно ее собственной системы координат (0, 0).
+
+![image](https://github.com/sashakid/ios-guide/raw/master/Images/uiview_frame.png)
+
+[https://nshipster.com/cggeometry/]
+
 
 
 #### Algorithms
-
-- [ ]	Напишите код, который разворачивает строку на С++. (переставить символы в строке в обратном порядке)?
-
-- [ ]	Поменять местами a и b не используя промежуточную переменную?
-
-- [ ]	Написать функцию вычисления n-го числа последовательности фебоначи. (если решить через рекурсию, спросят чем опасно такое решение)?
-
-- [ ]	Решить задачку о массиве: дан массив из 1001 элемента в котором присутсвуют все числа от 1 до 1000 и одно повторяется дважды, узнать какое, если к каждому элементу можно обратиться только 1 раз?
-
-- [ ]	Как из строки вытащить подстроку?
-
-- [ ]	В массиве 1001 число в диапазоне от 1 до 1000 включительно. Лишь одно число в массиве повторяется дважды. Надо за линейное время (и обратившись к каждому числу максимум один раз) найти продублированное число.
-
-
-
-### Logical
-
-- [ ]	Есть 4 человека, каждый проходит мост за 1, 2, 5, и 10 минут соответственно. Через мост они могут переходить только парами, держась за руку и только с фонариком. Притом один должен вернуться обратно и передать фонарик. Необходимо переправить всех за 17 мин на другую сторону. Задача решаема.
-
-
-#### Code Puzzels
-
-- [ ] Что произойдет здесь (компиляция  + время выполнения): 
-
-```objc
-NSString *s = [NSNumber numberWithInt:3]; 
-int i = [s intValue];
+---
+- [x]	**Напишите код, который разворачивает строку на С++. (переставить символы в строке в обратном порядке)?**
+```
+char* rev_str(char *s1) {
+    int l = strlen(s1);
+    char *res = new char [l];
+    for(int a = l-1, b = 0; a >= 0; a--, b++) {
+        res[b] = s1[a];
+    }
+    return res;
+}
+```
+а еще:
+```
+char s1_pr[100];
+cout << "Напишите любую строку: ";
+cin.getline( s1_pr, 100 );
 ```
 
-- [ ] Что не так с этим кодом? Зачем нужны `инициализаторы`?
+---
+- [x]	**Поменять местами a и b не используя промежуточную переменную?**
+```
+b=5;
+a=a+b;
+b=a-b;// здесь уже будет 3
+a=a-b; // а теперь равно 5````
 
-```objc
-[[[SomeClass alloc] init] init];
+[или так](http://ideone.com/nEzFkn)
 ```
 
-- [ ] Сработает ли `таймер`? Почему? 
 
-```objc
-void startTimer(void *threadId) {
-   [NSTimer  scheduleTimerWithTimeInterval:10.0f 
-      target:aTarget 
-          selector:@selector(tick: ) 
-          userInfo:nil
-           repeats:NO];
+---
+- [x]	**Написать функцию вычисления n-го числа последовательности фебоначи. (если решить через рекурсию, спросят чем опасно такое решение)?**
+```
+#include <iostream>
+ 
+int fib(int n)
+{
+    switch (n)
+    {
+    case 0:
+        return 1;
+    case 1:
+        return 1;
+    default:
+        return fib(n - 2) + fib(n - 1);
+    }
+}
+ 
+int main()
+{
+    int n;
+ 
+    std::cin >> n;
+ 
+    std::cout << fib(n);;
+ 
+    std::cin.clear();
+    std::cin.ignore();
+    std::cin.get();
+}
+```
+
+---
+- [x]	**Решить задачку о массиве: дан массив из 1001 элемента в котором присутсвуют все числа от 1 до 1000 и одно повторяется дважды, узнать какое, если к каждому элементу можно обратиться только 1 раз?**
+
+```
+int sum = 0;
+for (int i=0;i<=1000;i++)
+sum = sum + m[i];
+cout« sum-(1+1000)*1000/2;
+```
+
+---
+- [x]	**Как из строки вытащить подстроку?**
+
+Assuming either the key or value contains a quotation mark. The following will output the value after the ":". You can also use it in a loop to repeatedly extract the value field if you have multiple key-value pairs in the input string, provided that you keep a record of the position of last found instance.
+```
+#include <iostream>
+using namespace std;
+
+string extractInformation(size_t p, string key, const string& theEntireString)
+{
+  string s = "\"" + key +"\":\"";
+  auto p1 = theEntireString.find(s);
+  if (string::npos != p1)
+    p1 += s.size();
+  auto p2 = theEntireString.find_first_of('\"',p1);
+  if (string::npos != p2)
+    return theEntireString.substr(p1,p2-p1);
+  return "";
 }
 
-pthread_create(&thread, NULL, startTimer, (void *)t);
+int main() {
+  string data = "\"key\":\"val\" \"key1\":\"val1\"";
+  string res = extractInformation(0,"key",data);
+  string res1 = extractInformation(0,"key1",data);
+  cout << res << "," << res1 << endl;
+}
+```
+Outputs:
+```
+val,val1
 ```
 
-- [ ] Какой метод вызовется: класса A или класса B? Как надо изменить код, чтобы вызвался метод класса A?
+### Logical
+---
+- [x]	**Есть 4 человека, каждый проходит мост за 1, 2, 5, и 10 минут соответственно. Через мост они могут переходить только парами, держась за руку и только с фонариком. Притом один должен вернуться обратно и передать фонарик. Необходимо переправить всех за 17 мин на другую сторону. Задача решаема.**
 
-```objc
+```
+Самое оптимальное решение:
+- 1+2 = 2 min + 1 came back = 3 min
+- 3+4= 10 min + 2 came back = 12 min
+- 1+2 = 2 min
+-------------
+3+12+2=17 min
+```
+
+#### Code Puzzels
+---
+- [x] **Задача про банерокрутилку**
+Из заданного списка вывести поочередно, рандомно, а главное, без повторений, все его элементы.
+```
+import java.util.Random;
+class Banner
+{
+	public static void main(String[] args)
+	{
+		Random r = new Random();
+		int[] list = new int[100];// в угоду наглядности в дебри линкедлистов лезть не будем
+		for (int i = 0; i < 100; ++i)
+		{
+			list[i] = i;
+		}
+		/*А теперь главное - логика алгоритма*/
+		int index = 99;
+		int number;
+		while (index > 0)
+		{
+			number = r.nextInt(index);
+			System.out.println(list[number]);
+			list[number] = list[index];
+			--index;
+		}
+	}
+}
+```
+Теперь кратко и по сути, что здесь происходит. Пока в списке есть элементы, мы берем случайное число в пространстве длины массива, выводим его, потом последний элемент ставим на место только что выведенного, а индекс длины уменьшаем на единицу, пока не останется ничего.
+
+---
+- [x] **Задача на регулярное выражение**
+
+В системе авторизации есть следующее ограничение на формат логина: он должен начинаться с латинской буквы, может состоять из латинских букв, цифр, точки и минуса и должен закан-чиваться латинской буквой или цифрой. Минимальная длина логина — 1 символ. Максимальная — 20 символов.
+```
+BOOL loginTester(NSString* login) {
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\A[a-zA-Z](([a-zA-Z0-9\\.\\-]{0,18}[a-zA-Z0-9])|[a-zA-Z0-9]){0,1}\\z" options:NSRegularExpressionCaseInsensitive error:&error];
+    // Здесь надо бы проверить ошибки, но если регулярное выражение оттестированное и
+    // не из пользовательского ввода - можно пренебречь.
+    NSRange rangeOfFirstMatch = [regex rangeOfFirstMatchInString:login options:0 range:NSMakeRange(0, [login length])];
+    return (BOOL)(rangeOfFirstMatch.location!=NSNotFound);
+}
+```
+---
+- [x] **Метод, возвращающий N наиболее часто встречающихся слов во входной строке**
+```
+- (NSArray *)mostFrequentWordsInString:(NSString *)string count:(NSUInteger)count {
+    // получаем массив слов.
+    // такой подход для человеческих языков будет работать хорошо.
+    // для языков, вроде китайского, или когда язык заранее не известен,
+    // лучше использовать enumerateSubstringsInRange с опцией NSStringEnumerationByWords
+    NSMutableCharacterSet *separators = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
+    [separators formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
+    NSArray *words = [string componentsSeparatedByCharactersInSet:separators];
+    NSCountedSet *set = [NSCountedSet setWithArray:words];
+    // тут бы пригодился enumerateByCount, но его нет.
+    // будем строить вручную
+    NSMutableArray *selectedWords = [NSMutableArray arrayWithCapacity:count];
+    NSMutableArray *countsOfSelectedWords = [NSMutableArray arrayWithCapacity:count];
+    for (NSString *word in set) {
+        NSUInteger wordCount = [set countForObject:word];
+        NSNumber *countOfFirstSelectedWord = [countsOfSelectedWords count] ? [countsOfSelectedWords objectAtIndex:0] : nil; // в iOS 7 появился firstObject
+        if ([selectedWords count] < count || wordCount >= [countOfFirstSelectedWord unsignedLongValue]) {
+            NSNumber *wordCountNSNumber = [NSNumber numberWithUnsignedLong:wordCount];
+            NSRange range = NSMakeRange(0, [countsOfSelectedWords count]);
+            NSUInteger indexToInsert = [countsOfSelectedWords indexOfObject:wordCountNSNumber inSortedRange:range options:NSBinarySearchingInsertionIndex usingComparator:^(NSNumber *n1, NSNumber *n2) {
+                NSUInteger _n1 = [n1 unsignedLongValue];
+                NSUInteger _n2 = [n2 unsignedLongValue];
+                if (_n1 == _n2)
+                    return NSOrderedSame;
+                else if (_n1 < _n2)
+                    return NSOrderedAscending;
+                else
+                    return NSOrderedDescending;
+            }];
+            [selectedWords insertObject:word atIndex:indexToInsert];
+            [countsOfSelectedWords insertObject:wordCountNSNumber atIndex:indexToInsert];
+            // если слов уже есть больше чем нужно, удаляем то что с наименьшим повторением
+            if ([selectedWords count] > count) {
+                [selectedWords removeObjectAtIndex:0];
+                [countsOfSelectedWords removeObjectAtIndex:0];
+            }
+        }
+    }
+    return [selectedWords copy];
+    // можно было бы сразу вернуть selectedWords,
+    // но возвращать вместо immutable класса его mutable сабклас нехорошо - может привести к багам
+}
+// очень интересный метод для юнитестов: правильный результат может быть разным и зависит от порядка слов в строке.
+```
+
+Я бы именно такой подход и использовал, если бы мне нужно было решить эту задачу в реальном iOS приложении, при условии, что я понимаю, откуда будут браться входные данные для поиска и предполагаю, что размеры входной строки не будут больше нескольких мегабайт. Вполне разумное допущение для iOS приложения, на мой взгляд. Иначе на входе не было бы строки, а был бы файл. При реально больших входных данных прийдется попотеть над регулярным выражением для перебора слов, чтоб избавиться от одного промежуточного массива. Такое регулярное выражение очень зависит от языка — то что сработает для русского не проканает для китайского. А вот что делать со словами дальше — кроме прямолинейного алгоритма в голову ничего не приходит. Если бы нужно было выбрать одно наиболее часто встречающееся слово — это Fast Majority Voting. Но вся красота этого алгоритма в том, что он работает для выбора одного значения. Модификаций алгоритма для выбора N значений мне не известны. Самому модифицировать не получилось.
+
+---
+- [x] **Используя NSURLConnection, напишите метод для асинхронной загрузки текстового документа по HTTP. Приведите пример его использования**
+```
+- (void)pullTextFromURLString:(NSString *)urlString completion:(void(^)(NSString *text))callBack {
+    NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString:urlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        if (error) {
+            NSLog(@"Error %@", error.localizedDescription);
+        } else {
+            // вообще, не мешало бы определить кодировку, чтоб не было неприятностей
+            callBack( [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding] );
+        }
+    }];
+}
+```
+
+---
+- [x] **Перечислите все проблемы, которые вы видите в приведенном ниже коде. Предложите, как их исправить**
+```
+NSOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    for (int i = 0; i < 1000; ++i) {
+        if ([operation isCancelled]) return;
+        process(data[i]);
+    }
+}];
+[queue addOperation:operation];
+```
+Лично я вижу проблему в том, что переменная operation, «захваченная» блоком при создании блока, еще не проинициализирована до конца. Какое реально значение этой переменной будет в момент «захвата», зависит от того, используется ли этот код в методе класса или в простой функции. Вполне возможно, что сгенерированный код будет вполне работоспособен и так, но мне этот код не ясен. Как выйти из ситуации? Так:
+```
+NSBlockOperation *operation = [[NSBlockOperation alloc] init];
+[operation addExecutionBlock:^{
+    for (int i = 0; i < 1000; ++i) {
+        if ([operation isCancelled]) return;
+        process(data[i]);
+    }
+}];
+[queue addOperation:operation];
+```
+Возможно, достаточно было бы просто добавить модификатор _block в объявление переменной operation. Но так, как в коде выше — наверняка. Некоторые даже создают _weak копию переменной operation и внутри блока используют ее. Хорошо подумав я решил, что в данном конкретном случае, когда известно время жизни переменной operation и блока — это излишне. Ну и я бы подумал, стоит ли использовать NSBlockOperation для таких сложных конструкций. Разумных доводов привести не могу — вопрос личных предпочтений. Что еще с этим кодом не так? Я не люблю разных магических констант в коде и вместо 1000 использовал бы define, const, sizeof или что-то в этом роде. В длинных циклах в objective-c нужно помнить об autoreleased переменных и, если такие пере-менные используются в функции или методе process, а сам этот метод или функция об этом не заботится, нужно завернуть этот вызов в @autoreleasepool {}. Создание нового пула при каждой итерации цикла может оказаться накладным или излишним. Если не используется ARC, можно создавать новый NSAutoreleasePool каждые, допустим, 10 итераций цикла. Если исполь-зуется ARC, такой возможности нет. Кстати, это, наверное, единственный довод не использо-вать ARC. По коду не ясно, меняются ли данные в процессе обработки, обращается ли кто-то еще к этим данным во время обработки из других потоков, какие используются структуры данных, заботится ли сам process о монопольном доступе к данным тогда когда это нужно. Может понадобиться позаботиться о блокировках.
+
+Doh. Dear future googlers: of course operation is nil when copied by the block, but it doesn't have to be copied. It can be qualified with _block like so:
+```
+//THIS MIGHT LEAK! See the update below.
+__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+   while( ! [operation isCancelled]){
+      //do something...
+   }
+}];
+```
+UPDATE:
+Upon further meditation, it occurs to me that this will create a retain cycle under ARC. In ARC, I believe _block storage is retained. If so, we're in trouble, because NSBlockOperation also keeps a strong references to the passed in block, which now has a strong reference to the operation, which has a strong reference to the passed in block, which… It's a little less elegant, but using an explicit weak reference should break the cycle:
+```
+NSBlockOperation *operation = [[NSBlockOperation alloc] init];
+__weak NSBlockOperation *weakOperation = operation;
+[operation addExecutionBlock:^{
+   while(![weakOperation isCancelled]){
+      //do something...
+   }
+}];
+```
+
+---
+- [x] **Напишите запрос, возвращающий названия треков, скачанных более 1000 раз**
+```
+CREATE TABLE tracks (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+)
+
+CREATE TABLE track_downloads (
+  download_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+  track_id INT NOT NULL,
+  download_time TIMESTAMP NOT NULL DEFAULT 0,
+  ip INT NOT NULL,
+  PRIMARY KEY (download_id)
+)
+```
+Вот такой запрос справляется с задачей замечательно:
+```
+select name from tracks where id in
+    (select track_id from
+        (select track_id, count(*) as track_download_count from track_downloads
+            group by track_id order by track_download_count desc)
+				where track_download_count > 1000)
+```
+
+---
+- [x] **Какой метод вызовется: класса A или класса B?**
+```
 @interface A : NSObject
 - (void)someMethod;
 @end
 
 @implementation A
 - (void)someMethod {
-    NSLog(@"This is class A");
+	NSLog(@"This is class A");
 }
 @end
 
@@ -3508,8 +3834,8 @@ pthread_create(&thread, NULL, startTimer, (void *)t);
 @end
 
 @implementation B
-- (void)someMethod  {
-    NSLog(@"This is class B");
+- (void)someMethod {
+	NSLog(@"This is class B");
 }
 @end
 
@@ -3517,126 +3843,479 @@ pthread_create(&thread, NULL, startTimer, (void *)t);
 @end
 
 @implementation C
-- (void)method  {
-    A *a = [B new];
-    [a someMethod];
+- (void)method {
+	A *a = [B new];
+	[a someMethod];
 }
+@end
+```
+Ответ: вызовется метод класса B.
+
+---
+- [x] **Что выведется в консоль?**
+```
+NSObject *object = [NSObject new];
+dispatch_async(dispatch_get_main_queue(), ^ {
+	NSLog(@"A %d", [object retainCount]);
+	dispatch_async(dispatch_get_main_queue(), ^ {
+		NSLog(@"B %d", [object retainCount]);
+	});
+	NSLog(@"C %d", [object retainCount]);
+});
+NSLog(@"D %d", [object retainCount]);
+```
+Ответ:
+```
+D 2
+A 2
+C 3
+B 2
 ```
 
-- [ ] В каких случаях лучше использовать `strong`, а в каких `copy` для NSString? Почему?
+---
+- [x] **Нужно сделать повторяемый таймер, который вызывается каждую минуту в бекграунде. Как это сделать?**
 
-```objc
-@property (nonatomic, strong) NSString *someString;
-@property (nonatomic, copy) NSString *anotherString;
+Пояснение к заданию: Прицельная точность тиков не важна, достаточно некая периодичность.
+
+Решение: Если надо сделать таймер в фоне, то стоит выбирать поток с бегущим ранлупом. Либо воспользоваться уже готовым решением для GCD.
 ```
-
-- [ ] Что выведется в консоль? Почему?
-
-```objc
-- (BOOL)objectsCount {
-    NSMutableArray *array = [NSMutableArray new];
-    for (NSInteger i = 0; i < 1024; i++) {
-        [array addObject:[NSNumber numberWithInt:i]];
+dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispatch_queue_t queue, dispatch_block_t block) {
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+    if (timer) {
+        dispatch_source_set_timer(timer, dispatch_walltime(NULL, 0), interval, leeway);
+        dispatch_source_set_event_handler(timer, block);
+        dispatch_resume(timer);
     }
-    return array.count;
+    return timer;
 }
+```
 
-- (void)someMethod {
-    if ([self objectsCount]) {
-        NSLog(@"has objects");
+---
+- [x] **Что произойдет после запуска приложения?**
+```
+func application(_ application: UIApplication, didFinishLaunchingWithOptions...) -> Bool {
+    DispatchQueue.global().async {
+        Timer.scheduledTimer(timeInterval: 0.4, target: self,
+	                         selector: #selector(self.tickTimer),
+				 userInfo: nil, repeats: true)
     }
-    else {
-        NSLog(@"no objects");
-    }
+    return true
+}
+
+func tickTimer() {
+    print("Tick-Tack")
 }
 ```
+Решение: Ничего не произойдет. Ранлуп не взведен. А еще будет небольшая утечка памяти.
+Для исправления ошибки нужно выбирать бегущий ранлуп или использовать функцию sync
 
-- [ ] Выведется ли в дебагер «Hello world»? Почему?
 
-```objc
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        NSLog(@"Hello world");
-    });
 
-   /* Another implementation */
-   return YES;
-}
-```
 
-- [ ] Что выведется в консоль?
-
-```objc
- dispatch_async(dispatch_get_main_queue(), ^
-    {
-        NSLog(@"A %d", [object retainCount]);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"B %d", [object retainCount]);
-        });
-        NSLog(@"C %d", [object retainCount]);
-    });
-    NSLog(@"D %d", [object retainCount]);
-```
-
-- [ ] Что произойдет при исполнении следующего кода? 
-
-```objc
-Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
-```
 #### Extended questions
+---
+- [ ]	**Фундаментальные типы и коллекции?**
 
-- [ ]	Анкета в которой просят оценить свои знания по технологиям по 10 бальной шкале.
+![image](https://github.com/sashakid/ios-guide/raw/master/Images/objc_collections.png)
 
-- [ ]	Objective-C
+Mutability
 
-- [ ]	C
+Most collection classes exist in two versions: mutable and immutable (default). What’s the big advantage? Thread safety. Immutable collections are fully thread safe and can be iterated from multiple threads at the same time, without any risk of mutation exceptions. Your API should never expose mutable collections. Of course there’s a cost when going from immutable and mutable and back - the object has to be copied twice, and all objects within will be retained/released. Sometimes it’s more efficient to hold an internal mutable collection and return a copied, immutable object on access. Notably, some of the more modern collection classes like NSHashTable, NSMapTable, and NSPointerArray are mutable by default and don’t have immutable counterparts. They are meant for internal class use, and a use case where you would want those immutable would be quite unusual.
 
-- [ ]	Swift
+Core Foundation:
+CFMutableDictionary The access time for a value in the dictionary is guaranteed to be at worst O(N) for any implementation, current and future, but will often be O(1) (constant time). Insertion or deletion operations will typically be constant time as well, but are O(N^2) in the worst case in some implementations. Access of values through a key is faster than accessing values directly (if there are any such operations). Dictionaries will tend to use significantly more memory than a array with the same number of values.
+CFMutableArray
+CFMutableBag
+CFBinaryHeap
+CFMutableBitVector
+CFMutableTree
+CFMutableSet
+Foundation:
+NSArray (NSMutableArray) – управляет упорядоченной коллекцией элементов, называемой массивом. Вы можете использовать объекты этого класса для создания неизменяемых массивов. Это значит, что все элементы объектов класса NSArray доступны только для чтения. Имеется возможность доступа к элементам массива по индексу. Массивы могут хранить элементы различных типов. Массивы поддерживают сортировку и поиск элементов, а также сравнение самих массивов между собой. The most interesting part is that Apple doesn’t guarantee O(1) access time on individual object access - as you can read in the note about Computational Complexity in the CFArray.h CoreFoundation header: The access time for a value in the array is guaranteed to be at worst O(lg N) for any implementation, current and future, but will often be O(1) (constant time). Linear search operations similarly have a worst case complexity of O(Nlg N), though typically the bounds will be tighter, and so on. Insertion or deletion operations will typically be linear in the number of values in the array, but may be O(Nlg N) clearly in the worst case in some implementations. There are no favored positions within the array for performance; that is, it is not necessarily faster to access values with low indices, or to insert or delete values with high indices, or whatever.
+NSPointerArray – mutable collection modeled after NSArray but it can also hold NULL values, which can be inserted or extracted (and which contribute to the object’s count). Moreover, unlike traditional arrays, you can set the count of the array directly. In a garbage collected environment, if you specify a zeroing weak memory configuration, if an element is collected it is replaced by a NULL value.
+NSDictionary (NSMutableDictionary) – следует использовать когда требуется удобный и эффективный способ хранения данных, ассоциированных с ключом. Объекты класса NSDictionary позволяют хранить неизменяемые пары объектов “ключ/значение” различных типов. Ключи в словаре NSDictionary не могут дублироваться, повторение значений допускается. Типы ключей и значений могут, но не обязаны совпадать. Особенно эффективными по скорости будут операции поиска по ключу, так как словарь специально оптимизирован для них.
+NSSet (NSMutableSet) – объекты представляют неупорядоченные множества различных объектов. Вы можете использовать множества в качестве альтернативы массивам, когда порядок элементов не важен, но требуется быстрое определение O(1) принадлежности объекта множеству. Операция определения принадлежности выполняется значительно быстрее в сравнении с массивами. NSSet can only work efficiently if the hashing method used is balanced; if all objects are in the same hash bucket, then NSSet is not much faster in object-existence checking than NSArray. Variants of NSSet are also NSCountedSet, and the non-toll-free counter-variant CFBag / CFMutableBag.
+NSOrderedSet (NSMutableOrderedSet) – объявляет программный интерфейс для упорядоченного множества объектов. Вы задаёте записи неизменяемого множества на этапе его создания, после этого записи не могут быть изменены. Вы можете использовать упорядоченные множества как альтернативу массивам, когда порядок элементов является важным и требуется высокая скорость поиска элементов в коллекции. Класс NSMutableOrderedSet объявляет программный интерфейс к изменяемому упорядоченному множеству различных объектов. Объекты класса NSMutableOrderedSet объекты не похожи на массивы языка Си. Во время создания такого множества вы можете указать размер, но реальный размер всё равно будет равен 0.
+NSCountedSet – объявляет программный интерфейс к изменяемой, неупорядоченной коллекции нечетких объектов. Счётное множество также известно как Bag. Каждый отдельный объект, вставленный в NSCountedSet, имеет счётчик, связанный с ним. Объект NSCountedSet отслеживает количество раз, когда объекты были вставлены, и требует, чтобы объекты были удалены такое же количество раз. В то же время, внутри объекта NSSet существует только один экземпляр вставляемого объекта, даже если этот объект был добавлен в множество несколько раз.
+NSIndexSet (NSMutableIndexSet) – represents an immutable collection of unique unsigned integers, known as indexes because of the way they are used. This collection is referred to as an index set. You use index sets in your code to store indexes into some other data structure. For example, given an NSArray object, you could use an index set to identify a subset of objects in that array. You should not use index sets to store an arbitrary collection of integer values because index sets store indexes as sorted ranges. This makes them more efficient than storing a collection of individual integers. It also means that each index value can only appear once in the index set. The designated initializers of the NSIndexSet class are: init, initWithIndexesInRange:, and initWithIndexSet:. You must not subclass the NSIndexSet class. The mutable subclass of NSIndexSet is NSMutableIndexSet.
+NSHashTable – в отличие от NSSet, поддерживает слабые ссылки. Он может содержать слабые ссылки на объекты. Объекты класса NSHashTable могут содержать произвольные указатели, хранимые объекты не ограничиваются объектами классов. Можно настроить экземпляр NSHashTable для работы с произвольными указателями, а не только с объектами классов. Благодаря своим свойствам, класс NSHashTable это не множество, потому что он может вести себя по-другому.
+NSMapTable – is a general-purpose analogue of NSDictionary. Contrasted with the behavior of NSDictionary / NSMutableDictionary, NSMapTable has the following characteristics:
+NSDictionary / NSMutableDictionary copies keys, and holds strong references to values.
+NSMapTable is mutable, without an immutable counterpart.
+NSMapTable can hold keys and values with weak references, in such a way that entries are removed when either the key or value is deallocated.
+NSMapTable can copy its values on input.
+NSMapTable can contain arbitrary pointers, and use pointer identity for equality and hashing checks.
+Usage: Instances where one might use NSMapTable include non-copyable keys and storing weak references to keyed delegates or another kind of weak object.
 
-- [ ]	iOS Platform
+10.NSIndexPath – представляет путь к конкретному узлу в виде дерева вложенных массивов коллекций. Этот путь известен как индексный путь. Каждый индекс в индексном пути представляет индекс в массиве дочерних элементов от одного узла в дереве к другому.
 
-- [ ]	Architecture
+![image](https://github.com/sashakid/ios-guide/raw/master/Images/complexity.png)
 
-- [ ]	Memory Management
+NSArray is the best choice to use for a list of items if you're going to iterate over them in sequence, or access directly by index. They are also efficient to use as a queue or stack, as adding or removing items from either the beginning or is O(1). Checking to see if an object exists in the array using containsObject: is an O(N) operation, as it may take up to N comparisons to find the match. NSSet is a great choice for checking containsObject: due to efficient hashing algorithms. Adding/removing items is always O(1). In addition, you have fast set arithmetic operations. NSDictionary is a great choice if you have a natural key you can use to access objects. This has no inherent order, but if you know the key you can retrieve any object as O(1).
 
-- [ ]	Multithreading
+Разница между Set и Array
+NSSet предназначен для создания несортированных массивов данных (например каких-либо объектов). Стоит обратить внимание, что объект, который хранится в NSSet, встречается только один раз. Т.е. все элементы NSSet — уникальные. Добавить дубликат элемента в NSMutableSet у вас также не получится. Для создания несортированного массива, в котором можно использовать неуникальные элементы, можно использовать NSCountedSet. Основным преимуществом NSCountedSet перед использованием классического массива NSArray является то, что элемент может быть продублирован огромное количество раз и при этом занимать памяти как один элемент. Это объясняется тем, что NSCountedSet хранит в памяти только одну копию элемента и запоминает сколько раз этот элемент встречается. Если для вас не важен порядок элементов внутри массива и вы используете действительно большие объемы информации, то использование NSSet повысит производительность приложения за счет снижения потребляемой памяти. Несмотря на то, что количество элементов хранящихся в памяти будет одинаковым, NSSet не тратит память на то, чтобы помнить в какой последовательности хранятся элементы.
+```
+NSSet *set = [NSSet setWithObjects:@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"0", nil];
+NSLog(@"%@", set);
+{(
+    7,
+    3,
+    8,
+    4,
+    0,
+    9,
+    5,
+    1,
+    6,
+    2
+)}
+```
+Difference between NSArray and CFArray
+What's the point of them both existing? There are a few reasons.
 
-- [ ]	UIKit
+If you want to provide a C API, like the Carbon API, and you need things like arrays and dictionaries of referenced-counted objects, you want a library like Core Foundation (which provides CFArray), and of course it needs to have a C API.
+If you want to write libraries for third-parties to use on Windows (for example), you need to provide a C API.
+If you want to write a low-level library, say for interfacing with your operating system's kernel, and you want avoid the overhead of Objective-C messaging, you need a C API.
+So those are good reasons for having Core Foundation, a pure C library.
 
-- [ ]	CoreData, Persistency
+But if you want to provide a higher-level, more pleasant API in Objective-C, you want Objective-C objects that represent arrays, dictionaries, reference-counted objects, and so on. So you need Foundation, which is an Objective-C library.
 
-- [ ]	Design Patterns
+When should you use one or the other? Generally, you should use the Objective-C classes (e.g. NSArray) whenever you can, because the Objective-C interface is more pleasant to use: myArray.count (or [myArray count]) is easier to read and write than CFArrayGetCount(myArray). You should use the Core Foundation API only when you really need to: when you're on a platform that doesn't have Objective-C, or when you need features that the Core Foundation API provides but the Objective-C objects lack. For example, you can specify callbacks when creating a CFArray or a CFDictionary that let you store non-reference-counted objects. The NSArray and NSDictionary classes don't let you do that - they always assume you are storing reference-counted objects. Are the CF objects just legacy objects? Not at all. In fact, Nextstep existed for years with just the Objective-C Foundation library and no Core Foundation library. When Apple needed to support both the Carbon API and the Cocoa API on top of the same lower-level operating system facilities, they created Core Foundation support both.
 
-- [ ]	Unit Testing
+Enumeration
+Enumeration is where computation gets interesting. It's one thing to encode logic that's executed once, but applying it across a collection – that's what makes programming so powerful.
 
-- [ ]	Git
+Procedural increments a pointer within a loop
+Object Oriented applies a function or block to each object in a collection
+Functional works through a data structure recursively
+Cocoa содержит три основных способа перечисления содержимого коллекции. К ним относятся классический луп "for", быстрое перечисление и блочное перечисление. Существует также NSEnumerator класс, хотя в целом был замещен быстрым перечислением.
+```
+C Loops (for/while)
 
-- [ ]	Core Animation
+for and while loops are the "classic" method of iterating over a collection. Anyone who's taken Computer Science 101 has written code like this before:
 
-- [ ]	Algorithms and Data Structure
+for (NSUInteger i = 0; i < [array count]; i++) {
+	id object = array[i];
+	NSLog(@"%@", object);
+}
+```
+But as anyone who has used C-style loops knows, this method is prone to off-by-one errors—particularly when used in a non-standard way. Fortunately, Smalltalk significantly improved this state of affairs with an idea called list comprehensions, which are commonly known today as for/in loops.
 
-- [ ]	Networking
+List Comprehension (for/in)
 
-- [ ]	Swift
+By using a higher level of abstraction, declaring the intention of iterating through all elements of a collection, not only are we less prone to error, but there's a lot less to type:
 
-- [ ]	Фундаментальные типы и коллекции?
+for (id object in array) {
+    NSLog(@"%@", object);
+}
+Поведение для быстрого перечисления немного отличается в зависимости от типа коллекции. Массивы и наборы перечисляют их содержимое, а словари перечисляют свои ключи. NSIndexSet и NSIndexPath не поддерживают быстрое перечисление.
+```
+NSString *key;
+for (key in someDictionary) {
+   	NSLog(@"Key: %@, Value %@", key, [someDictionary objectForKey: key]);
+}
+```
+In Cocoa, comprehensions are available to any class that implements the NSFastEnumeration protocol, including NSArray, NSSet, and NSDictionary. Быстрое перечисление является предпочтительным методом перечисления содержимого коллекции, поскольку оно обеспечивает следующие преимущества:
 
-- [ ]	Аттрибут @UIApplicationMain ?
+Перечисление является более эффективным, чем использование NSEnumerator напрямую.
+Синтаксис краток
+Перечислитель вызывает исключение, если вы измените коллекции при перечислении.
+Вы можете выполнять несколько перечислений одновременно.
+Блочное перечисление
 
-- [ ]	Что такое Bridge Header? Как использовать Objective-C код в Swift проекте?
+Для перечисления с блоком, вызовите соответствующий метод и укажите блок для использования.
+```
+NSArray *anArray = [NSArray arrayWithObjects:@"A", @"B", @"D", @"M", nil];
+NSString *string = @"c";
+[anArray enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
+	if ([obj localizedCaseInsensitiveCompare:string] == NSOrderedSame) {
+		NSLog(@"Object Found: %@ at index: %i", obj, index);
+		*stop = YES;
+	}
+}];
+```
+Для перечисления NSArray, параметр index полезен для одновременного перечисления. Без этого параметра, единственный способ получить доступ к индексу был бы использованием метода indexOfObject:, который является неэффективным. stop параметр важен для производительности, так как он позволяет остановить перечисление раньше, на основе некоторого условия, определяемого в пределах блока. Методы перечисления на основе блока в других коллекциях, немного отличаются по названию.
 
-- [ ]	Оператор guard?
+Использование перечислителя NSEnumerator
 
-- [ ]	Интерполяция vs конкатенация строк?
+Абстрактный класс, экземпляры подклассов которого перечисляют коллекции других объектов, таких как массивы и словари. Все методы создания определены в классах коллекций, таких как NSArray, NSSet и NSDictionary, которые обеспечивают специальные объекты NSEnumerator для перечисления их содержимого. Например, класс NSArray имеет два метода, которые возвращают объект NSEnumerator: objectEnumerator и reverseObjectEnumerator. NSDictionary также имеет два метода, которые возвращают объект NSEnumerator: keyEnumerator и objectEnumerator. Эти методы позволяют перечислить содержимое словаря по ключу или по значению, соответственно. Вы отправляете nextObject, чтобы вновь созданный объект NSEnumerator возвращал следующий объект в оригинальной коллекции. Когда коллекция будет исчерпана, то возвращается nil. Вы не можете "сбросить" перечислитель после того, как он исчерпал свои коллекции. Подклассы NSEnumerator, используемые NSArray, NSDictionary и NSSet сохраняют коллекцию во время перечисления. Когда перечисление закончено, временные коллекции освобождаются. Примечание: не безопасно изменение коллекции во время её перечисления. Некоторые коллекции в настоящее время поддерживают такие операции, но такое поведение не гарантировано в будущем. Для перечисления коллекции, вы должны создать новый перечислитель:
+```
+NSMutableDictionary *myMutableDictionary = ... ;
+NSMutableArray *keysToDeleteArray = [NSMutableArray arrayWithCapacity:[myMutableDictionary count]];
+NSString *aKey;
+NSEnumerator *keyEnumerator = [myMutableDictionary keyEnumerator];
+while (aKey = [keyEnumerator nextObject]) {
+	if (/* Проверка критериев для ключа или значения */) {
+		[keysToDeleteArray addObject:aKey];
+	}
+}
+[myMutableDictionary removeObjectsForKeys:keysToDeleteArray];
+```
+Array
+![image](https://github.com/sashakid/ios-guide/raw/master/Images/array_performance.png)
 
-- [ ]	let vs var?
+Dictionary
 
-- [ ]	typealias? Создание своего собственного типа?
+![image](https://github.com/sashakid/ios-guide/raw/master/Images/dictionary_performance.png)
 
-- [ ]	nil в Swift vs nil в Objective-C? Различия?
+Why is NSFastEnumeration so slow here? Iterating the dictionary usually requires both key and object; fast enumeration can only help for the key, and we have to fetch the object every time ourselves. Using the block-based enumerateKeysAndObjectsUsingBlock: is more efficient since both objects can be more efficiently prefetched.
 
-- [ ]	Оператор '??'?
+**Filtering**
+If you look at an arbitrary code base, chances are you’ll sooner or later run into a piece of code similar to this one:
+```
+NSMutableArray *oldSkoolFiltered = [[NSMutableArray alloc] init];
+for (Book *book in bookshelf) {
+	if ([book.publisher isEqualToString:@"Apress"]) {
+		[oldSkoolFiltered addObject:book];
+	}
+}
+```
+It’s a straight-forward approach to filtering an array of items (in this case, we’re talking about books) using a rather simple if-statement. Nothing wrong with this, but despite the fact we’re using a fairly simple expression here, the code is rather verbose. We can easily imagine what will happen in case we need to use more complicated selection criteria or a combination of filtering criteria.
+
+**Simple filtering with NSPredicate**
+
+Thanks to Cocoa, we can simplify the code by using NSPredicate. NSPredicate is the object representation of an if-statement, or, more formally, a predicate. Predicates are expressions that evaluate to a truth value, i.e. true or false. We can use them to perform validation and filtering. In Cocoa, we can use NSPredicate to evaluate single objects, filter arrays and perform queries against Core Data data sets. Let’s have a look at how our example looks like when using NSPredicate:
+```
+NSPredicate *predicate = [NSPredicate predicateWithFormat:@"publisher == %@", @"Apress"];
+NSArray *filtered  = [bookshelf filteredArrayUsingPredicate:predicate];
+```
+**Filtering with Regular Expressions**
+
+Regular Expressions can be used to solve almost any problem, so it’s good to know you can use them in NSPredicates as well. To use regular expressions in your NSPredicate, you need to use the MATCHES operator. Let’s filter all books that are about iPad or iPhone programming:
+```
+predicate = [NSPredicate predicateWithFormat:@"title MATCHES '.*(iPhone|iPad).*'"];
+filtered = [bookshelf filteredArrayUsingPredicate:predicate];
+NSLog(@"Books that contain 'iPad' or 'iPhone' in their title", filtered);
+```
+You need to obey some rules when using regular expressions in NSPredicate: most importantly, you cannot use regular expression metacharacters inside a pattern set.
+
+**Filtering using set operations**
+
+Let’s for a moment assume you want to filter all books that have been published by your favorite publishers. Using the IN operator, this is rather simple: first, we need to set up a set containing the publishers we’re interested in. Then, we can create the predicate and finally perform the filtering operation:
+```
+NSArray *favoritePublishers = [NSArray arrayWithObjects:@"Apress", @"O'Reilly", nil];
+predicate = [NSPredicate predicateWithFormat:@"publisher IN %@", favoritePublishers];
+filtered  = [bookshelf filteredArrayUsingPredicate:predicate];
+NSLog(@"Books published by my favorite publishers", filtered);
+```
+
+**Advanced filtering thanks to KVC goodness**
+
+NSPredicate relies on key-value coding to achieve its magic. On one hand this means your classes need to be KVC compliant in order to be queried using NSPredicate (at least the attributes you want to query). On the other hand, this allows us to perform some very interesting things with very little lines of code. Let’s for example retrieve a list of books written by authors with the name “Mark”:
+```
+predicate = [NSPredicate predicateWithFormat:@"authors.lastName CONTAINS %@", @"Mark" ];
+filtered  = [bookshelf filteredArrayUsingPredicate:predicate];
+```
+In case we’d want to return the value of one of the aggregate functions, we don’t need to use NSPredicate itself, but instead use KVC directly. Let’s retrieve the average price of all books on our shelf:
+```
+NSNumber *average = [bookshelf valueForKeyPath:@"@avg.price"];
+```
+**Sorting
+Сортировка массивов**
+
+Вам может потребоваться разместить несколько созданных пользователем строк в алфавитном порядке, либо вам потребуется разместить номера в убыванию или по возрастанию – используйте дескрипторы блоков и селекторов. Дескрипторы сортировки (экземпляры NSSortDescriptor) обеспечивают удобный и абстрактный способ описания порядка сортировки. Простая сортировка по алфавиту:
+```
+NSArray *myArray = @[@"v", @"a", @"c", @"b", @"z"];
+NSLog(@"%@", [myArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]);
+sortedArrayUsingDescriptors: или sortUsingDescriptors:
+
+//Сначала создадим массив из словарей
+NSString *LAST = @"lastName";
+NSString *FIRST = @"firstName";
+NSMutableArray *array = [NSMutableArray array];
+NSArray *sortedArray;
+NSDictionary *dict;
+dict = [NSDictionary dictionaryWithObjectsAndKeys:@"Jo", FIRST, @"Smith", LAST, nil];
+[array addObject:dict];
+dict = [NSDictionary dictionaryWithObjectsAndKeys:@"Joe", FIRST, @"Smith", LAST, nil];
+[array addObject:dict];
+dict = [NSDictionary dictionaryWithObjectsAndKeys:@"Joe", FIRST, @"Smythe", LAST, nil];
+[array addObject:dict];
+dict = [NSDictionary dictionaryWithObjectsAndKeys:@"Joanne", FIRST, @"Smith", LAST, nil];
+[array addObject:dict];
+dict = [NSDictionary dictionaryWithObjectsAndKeys:@"Robert", FIRST, @"Jones", LAST, nil];
+[array addObject:dict];
+//Далее сортируем содержимое массива по last name затем first name
+//Результаты могут быть показаны пользователю
+//Обратите внимание на использование localizedCaseInsensitiveCompare:selector
+NSSortDescriptor *lastDescriptor = [[NSSortDescriptor alloc] initWithKey:LAST ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:FIRST ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+NSArray *descriptors = [NSArray arrayWithObjects:lastDescriptor, firstDescriptor, nil];
+sortedArray = [array sortedArrayUsingDescriptors:descriptors];
+```
+**Сортировка с помощью функции**
+
+Такой подход значительно менее гибкий.
+```
+NSInteger lastNameFirstNameSort(id person1, id person2, void *reverse) {
+NSString *name1 = [person1 valueForKey:LAST];
+NSString *name2 = [person2 valueForKey:LAST];
+NSComparisonResult comparison = [name1 localizedCaseInsensitiveCompare:name2];
+    if (comparison == NSOrderedSame) {
+        name1 = [person1 valueForKey:FIRST];
+        name2 = [person2 valueForKey:FIRST];
+        comparison = [name1 localizedCaseInsensitiveCompare:name2];
+    }
+	if (*(BOOL *)reverse == YES) {
+        return 0 - comparison;
+    }
+    return comparison;
+}
+BOOL reverseSort = YES;
+sortedArray = [array sortedArrayUsingFunction:lastNameFirstNameSort context:&reverseSort];
+```
+
+**Сортировка с блоками**
+```
+NSArray *sortedArray = [array sortedArrayUsingComparator: ^(id obj1, id obj2) {
+	if ([obj1 integerValue] > [obj2 integerValue]) {
+		return (NSComparisonResult)NSOrderedDescending;
+	}
+	if ([obj1 integerValue] < [obj2 integerValue]) {
+		return (NSComparisonResult)NSOrderedAscending;
+	}
+	return (NSComparisonResult)NSOrderedSame;
+}];
+```
+
+**Сортировка с помощью функций и селекторов**
+
+Следующий листинг иллюстрирует использование методов sortedArrayUsingSelector:, sortedArrayUsingFunction:context:, и sortedArrayUsingFunction:context:hint:. Самым сложным из этих методов является sortedArrayUsingFunction:context:hint:. Он наиболее эффективен, когда у вас есть большой массив (N записей), которые вам надо отсортировать раз и затем лишь слегка изменить (P добавлений и удалений, где P гораздо меньше, чем N). Вы можете использовать работу, которую вы сделали в оригинальнй сортировке, и сделать своего рода слияние между N "старых" предметов и Р "новых" предметов. Чтобы получить соответствующую подсказку, вы используете sortedArrayHint когда исходный массив был отсортирован, и держите его, пока вам это нужно (если вы хотите, отсортировать массив после того, как он был изменен).
+```
+NSInteger alphabeticSort(id string1, id string2, void *reverse) {
+	if (*(BOOL *)reverse == YES) {
+		return [string2 localizedCaseInsensitiveCompare:string1];
+	}
+	return [string1 localizedCaseInsensitiveCompare:string2];
+}
+NSMutableArray *anArray = [NSMutableArray arrayWithObjects:
+@"aa", @"ab", @"ac", @"ad", @"ae", @"af", @"ag", @"ah", @"ai", @"aj", @"ak", @"al", @"am", @"an", @"ao", @"ap", @"aq", @"ar", @"as", @"at", @"au", @"av", @"aw", @"ax", @"ay", @"az", @"ba", @"bb", @"bc", @"bd", @"bf", @"bg", @"bh", @"bi", @"bj", @"bk", @"bl", @"bm", @"bn", @"bo", @"bp", @"bq", @"br", @"bs", @"bt", @"bu", @"bv", @"bw", @"bx", @"by", @"bz", @"ca", @"cb", @"cc", @"cd", @"ce", @"cf", @"cg", @"ch", @"ci", @"cj", @"ck", @"cl", @"cm", @"cn", @"co", @"cp", @"cq", @"cr", @"cs", @"ct", @"cu", @"cv", @"cw", @"cx", @"cy", @"cz", nil];
+// внимание: anArray отсортирован
+NSData *sortedArrayHint = [anArray sortedArrayHint];
+[anArray insertObject:@"be" atIndex:5];
+NSArray *sortedArray;
+// сортировка используя селектор
+sortedArray = [anArray sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+// сортировка используя функцию
+BOOL reverseSort = NO;
+sortedArray = [anArray sortedArrayUsingFunction:alphabeticSort context:&reverseSort];
+// сортировка с подсказкой
+sortedArray = [anArray sortedArrayUsingFunction:alphabeticSort context:&reverseSort hint:sortedArrayHint];
+```
+Sorting 1,000,000 elements:
+```
+selector: 4947.90[ms]
+function: 5618.93[ms]
+block: 5082.98[ms]
+```
+---
+- [x]	**Аттрибут @UIApplicationMain ?**
+
+Применяйте этот атрибут к классу для отображения того, что этот класс является “делегатом приложения”. Использование этого атрибута эквивалентно вызову функции UIApplicationMain и передачи в нее имени класса, в качестве имени класса-делегата.
+
+Если вы не используете этот атрибут, то вы должны предоставить в main.swift в функцию main вызов функции UIApplicationMain(_:_:_:). Например, если ваше приложение использует пользовательский подкласс UIApplication в качестве своего основного класса, то вызывайте функцию UIApplicationMain(_:_:_:) вместо использования этого атрибута.
+
+
+---
+- [x]	**Что такое Bridge Header? Как использовать Objective-C код в Swift проекте?**
+
+При добавлении файла Swift к сборке на Objective-C или файла Objective-C к сборке на Swift, Xcode предложит вам создать связующий заголовок (bridging header). Это файл .h, входящий в состав проекта. По умолчанию его имя производится от имени сборки, но вообще оно произвольное и может быть изменено, если вы аналогичным образом измените настройку «связующий заголовок» и в сборке Objective-C.
+Файл .h на Objective-C будет виден для Swift при условии, что вы импортируете его (#import) в этот связующий заголовок.
+
+
+---
+- [x]	**Оператор guard?**
+
+В Swift 2 было введено новое ключевое слово guard, которое позволяет улучшить ваши ранние возвраты в трех направлениях:
+
+Делает вашу цель более очевидной: вы говорите guard, что вы хотите видеть, а не то, чего не хотите. guard создан специально для вылавливания невалидных параметров, так что каждый, кто будет читать ваш код, будет явно видеть то, что вы хотите получить.
+Все опциональные значения, извлеченные при помощи оператора guard, остаются в пределах видимости даже после того, как guard завершает свою работу, так что вы можете продолжать их использовать. Это означает, что вы проводите проверку и извлечение опционального значения, а затем, просто используете его дальше.
+guard позволяет сократить ваш код, что в свою очередь означает меньшее количество багов и более счастливых разработчиков.
+Любые условия, которые вы бы проверили при помощи if ранее, теперь вы можете проверить при помощи guard. И вот вам в доказательство несколько примеров:
+```
+guard name.characters.count > 0 else { throw InputError.NameIsEmpty } guard age > 18 else { return false } guard #available(iOS 9, *) else { return } func printName() { guard let unwrappedName = name else { print("You need to provide a name.") return } print(unwrappedName) }
+```
+В последнем примере отображено, как можно извлечь опциональное значение, а затем, использовать его далее. Именно это достоинство guard является его главным преимуществом перед методом ранних возвратов.
+
+
+---
+- [x]	**Интерполяция vs конкатенация строк?**
+
+Concatenation allows you to combine to strings together and it only works on two strings. Swift uses string interpolation to include the name of a constant or variable as a placeholder in a longer string, and to prompt Swift to replace it with the current value of that constant or variable.
+
+An update. Not sure what earlier versions of Swift allowed, but currently you can concatenate more than 2 Strings together in the same statement:
+```
+let str = "Hi, my name is "
+
+var concat = str + "2" + "3" + "4" + "5" + " works" //displays "Hi, my name is 2345 works"
+```
+Because both operands of + need to be Strings, you have to do a little extra work if you want to add a number to a String:
+```
+var concat2 = str + String(2) //displays "Hi, my name is 2"
+```
+Re why interpolation rather than concatenation, here's a quote from Apple's intro for interpolation: "String interpolation is a way to construct a new String value from a mix of constants, variables, literals, and expressions" In other words, you can use interpolation with numbers, booleans, etc. without first turning them into Strings, which you would have to do if you used concatenation.
+
+
+---
+- [ ]	**let vs var?**
+
+The let keyword defines a constant:
+```
+let theAnswer = 42
+```
+The theAnswer cannot be changed afterwards. This is why anything weak can't be written using let. They need to change during runtime and you must be using var instead.
+
+The var defines an ordinary variable.
+
+What is interesting:
+```
+The value of a constant doesn’t need to be known at compile time, but you must assign the value exactly once.
+```
+Another strange feature:
+```
+You can use almost any character you like for constant and variable names, including Unicode characters:
+```
+```
+let 🐶🐮 = "dogcow"
+```
+
+---
+- [x]	**typealias? Создание своего собственного типа?**
+
+Объявление псевдонима типа вводит именованный псевдоним существующего типа в программу. Объявления псевдонима типа объявляются с помощью ключевого слова typealias и имеют следующий вид:
+
+typealias имя = существующий тип
+После того, как псевдоним типа объявлен, имя псевдонима может быть использовано вместо существующего типа везде в вашей программе. Существующий тип может быть именованным типом или составным типом. Псевдонимы типов не создают новые типы, они просто позволяют имени ссылаться на существующий тип.
+
+
+---
+- [ ]	**nil в Swift vs nil в Objective-C? Различия?**
+
+Swift’s nil is not the same as nil in Objective-C. In Objective-C, nil is a pointer to a non-existent object. In Swift, nil is not a pointer—it is the absence of a value of a certain type. Optionals of any type can be set to nil, not just object types
+
+The compiler will convert Objective-C nils to Swift nils. That is why when translating from Objective-C all pointers must become optionals in Swift.
+
+The usefulness of this knowledge is right in the description you gave:
+
+Optionals of any type can be set to nil, not just object types
+
+In Swift all types can be made optional and therefore nil. For example, in Objective-C you cannot make an NSInteger nil.
+
+Technically nil is just a case in the Optional enum:
+```
+enum Optional<T> {
+    case None
+    case Some(T)
+}
+```
+nil is just shorthand for the None case
+
+
+---
+- [ ]	**Оператор '??'?**
+
+
 
 
 
