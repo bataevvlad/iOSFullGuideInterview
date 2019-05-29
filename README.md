@@ -6005,3 +6005,135 @@ Keychain может сохранить все данные после удале
 
 В котором отправили.
 
+#### Another Resources 
+
+---
+- [x] **NSLayoutConstraints**
+
+Label with height and width (Swift)
+To create label with height and width constraints here is the constraints...And don't forget to add label in to view with addSubview method
+```
+UILabel *Label = [[UILabel alloc] init];
+[Label setTranslatesAutoresizingMaskIntoConstraints:NO];  
+
+[self.view addSubview:Label];
+
+// Width constraint
+[Label addConstraint:[NSLayoutConstraint constraintWithItem:Label
+                                                      attribute:NSLayoutAttributeWidth
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:nil
+                                                      attribute: NSLayoutAttributeNotAnAttribute
+                                                     multiplier:1
+                                                       constant:200]];
+
+// Height constraint
+[Label addConstraint:[NSLayoutConstraint constraintWithItem:Label
+                                                      attribute:NSLayoutAttributeHeight
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:nil
+                                                      attribute: NSLayoutAttributeNotAnAttribute
+                                                     multiplier:1
+                                                       constant:21]];
+```
+Label with height and width (Swift)
+And In Swift
+```
+Label.setTranslatesAutoresizingMaskIntoConstraints(false)
+self.view.addSubview(Label)
+
+Label.addConstraint(NSLayoutConstraint(item: Label, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 21))
+Label.addConstraint(NSLayoutConstraint(item: Label, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 200))  
+```
+
+UPDATE As you update your question, here is my updated answer...
+```
+UILabel *Label1 = [[UILabel alloc] init];
+[Label1 setTranslatesAutoresizingMaskIntoConstraints:NO];
+UILabel *Label2 = [[UILabel alloc] init];
+[Label2 setTranslatesAutoresizingMaskIntoConstraints:NO];
+
+Label1.text = @"Label1";
+Label1.backgroundColor = [UIColor blueColor];
+Label2.text = @"Label2";
+Label2.backgroundColor = [UIColor redColor];
+
+[self.view addSubview:Label1];
+[self.view addSubview:Label2];
+
+// Width constraint
+[Label1 addConstraint:[NSLayoutConstraint constraintWithItem:Label1
+                                                  attribute:NSLayoutAttributeWidth
+                                                  relatedBy:NSLayoutRelationEqual
+                                                     toItem:nil
+                                                  attribute: NSLayoutAttributeNotAnAttribute
+                                                 multiplier:1
+                                                   constant:280]];
+
+// Height constraint
+[Label1 addConstraint:[NSLayoutConstraint constraintWithItem:Label1
+                                                  attribute:NSLayoutAttributeHeight
+                                                  relatedBy:NSLayoutRelationEqual
+                                                     toItem:nil
+                                                  attribute: NSLayoutAttributeNotAnAttribute
+                                                 multiplier:1
+                                                   constant:21]];
+
+// CenterX constraint
+[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.view
+                                                   attribute:NSLayoutAttributeCenterX
+                                                   relatedBy:NSLayoutRelationEqual
+                                                      toItem:Label1
+                                                   attribute: NSLayoutAttributeCenterX
+                                                  multiplier:1
+                                                    constant:0]];
+// Top constraint
+[self.view addConstraint:[NSLayoutConstraint constraintWithItem:Label1
+                                                      attribute:NSLayoutAttributeTop
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:self.topLayoutGuide
+                                                      attribute: NSLayoutAttributeBottom
+                                                     multiplier:1
+                                                       constant:40]];
+
+// label2
+[self.view addConstraint:[NSLayoutConstraint constraintWithItem:Label1
+                                                      attribute:NSLayoutAttributeLeading
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:Label2
+                                                      attribute: NSLayoutAttributeLeading
+                                                     multiplier:1
+                                                       constant:0]];
+// label2.Height = label1.Height
+[self.view  addConstraint:[NSLayoutConstraint constraintWithItem:Label1
+                                                      attribute:NSLayoutAttributeHeight
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:Label2
+                                                      attribute: NSLayoutAttributeHeight
+                                                     multiplier:1
+                                                       constant:0]];
+// label2.width = label1.width
+[self.view  addConstraint:[NSLayoutConstraint constraintWithItem:Label1
+                                                   attribute:NSLayoutAttributeWidth
+                                                   relatedBy:NSLayoutRelationEqual
+                                                      toItem:Label2
+                                                   attribute: NSLayoutAttributeWidth
+                                                  multiplier:1
+                                                    constant:0]];
+
+// label2.Top
+[self.view addConstraint:[NSLayoutConstraint constraintWithItem:Label2
+                                                      attribute:NSLayoutAttributeTop
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:Label1
+                                                      attribute: NSLayoutAttributeBottom
+                                                     multiplier:1
+                                                       constant:34]];
+						       
+```
+
+
+---
+- [x] **
+
+
