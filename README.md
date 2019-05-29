@@ -5914,7 +5914,7 @@ Forget that the frame property exists. Never set it directly. A view’s frame i
 
 
 ---
-- [ ] **Как работают связи (relationships) в CoreData. Чем отличаются No action, Nullify, Cascade, Deny(удаление)?**
+- [x] **Как работают связи (relationships) в CoreData. Чем отличаются No action, Nullify, Cascade, Deny(удаление)?**
 
 For the purposes of this tutorial, I have created a simple project with Core Data Entities that will handle both One-To-One and One-To-Many relationships.
 
