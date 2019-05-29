@@ -125,6 +125,11 @@ ivar-ы могут иметь аксессоры: @public, @private, @protected.
 ---
 - [x] **Чем категория отличается от расширения(extension, наименованная категория)?**
 
+В категории объявляются дополнительные методы. 
+
+В расширении добавляются методы и поля. Расширение представляет собой особый тип категории и 
+находится внутри реализации.
+
 Категория - это способ добавления методов к существующим классам. Они обычно находятся в файлах, называемых "Class + CategoryName.h", например "NSView + CustomAdditions.h" (и .m, конечно).
 
 Расширение класса является категорией, за исключением двух основных отличий:
@@ -2003,6 +2008,78 @@ bounds – это прямоугольник описываемый положе
 ---
 - [x]	**Цикл жизни UIViewController?**
 
+Ответственность UIViewController
+
+UIViewController согласно шаблону проектирования MVC обеспечивает взаимосвязь
+модели и представления.
+
+**Ответсвенность:**
+* Управление отображением данных на вьюхе (представлении). Изменяются данные - изменяется вьюха.
+* Управление пользовательскими взаимодействиями (событиями) на вьюхе (представлении). 
+* Управление размерами и версткой интерфейсов вьюхи (представления).
+
+Жизненный цикл (старая версия)
+
+1. Создание (Инициализация):
+- init
+- initWithNibName:
+
+2. Cоздание (Инициализация) view:
+- (BOOL)isViewLoaded
+- loadView
+- viewDidLoad
+- (UIView *)initWithFrame:(CGRect)frame
+- (UIView *)initWithCoder:(NSCoder *)coder
+
+3. Обработка изменения состояния view:
+- viewDidLoad
+- viewWillAppear:(BOOL)animated
+- viewDidAppear:(BOOL)animated
+- viewWillDisapear:(BOOL)animated
+- viewdidUnload
+
+4. Обработка memory warning
+- didReceiveMemoryWarning
+
+5. Уничтожение
+- viewDidUnload
+- dealloc
+
+Жизненный цикл (новая версия)
+Новая версия iOS имеет 6 ступеней которые управляют жизненным циклом UIViewController:
+
+1. loadView
+2. viewDidLoad
+3. viewWillAppear
+4. viewWillLayoutSubviews
+5. viewDidLayoutSubviews
+6. viewDidAppear
+1. loadView
+
+This event creates the view that the controller manages. It is only called when the view controller is created programmatically. This makes it a good place to create your views in code.
+2. viewDidLoad
+
+The viewDidLoad event is only called when the view is created and loaded into memory. 
+But the bounds for the view are not defined yet. This is a good place to initialize the objects that 
+the view controller is going to use.
+
+Вызывается когда view создана и загружена в память. Но границы view еще не определены.
+
+Инициализация объектов которые viewcontroller будет использовать.
+3. viewWillAppear
+
+This event notifies the the view controller whenever the view appears on the screen.
+In this step the view has bounds that are defined but the orientation is not set.
+4. viewWillLayoutSubviews
+
+This is the first step in the lifecycle where the bounds are finalized. If you are not using constraints or Auto Layout you probably want to update the subviews here.
+5. viewDidLayoutSubviews
+
+This event notifies the view controller that the subviews have been setup. It is a good place to make any changes to the subviews after they have been set.
+6. viewDidAppear
+
+The viewDidAppear event fires after the view is presented on the screen. Which makes it a good place to get data from a backend service or database.
+
 [https://habr.com/ru/post/129557/]
 
 ---
@@ -2297,6 +2374,20 @@ XML SQLite In-Memory Binary
 ---
 - [x]	**Что такое CALayer?**
 
+CALayer — это контейнер для битмапа изображения (bitmap image).
+
+Когда UIView отрисовывается в методе drawInRect: он создает битмап для своего слоя (layer).
+	
+Остальные переменные слоя (многие взяты из представления, такие как frame и backgroundColor) указывают 
+как и где это изображение находится на экране. Но основная часть слоя (с точки зрения использования памяти) 
+это битмап. 
+	
+Сам слой это 48 байт, а стандартный UIView всего лишь 96 байт, вне зависимости от размера экрана.
+	
+При этом потребление памяти для слоя зависит от размеров битмапа изображения на экране.
+	
+Например, для iPad Retina изображение на полный экран может достигать 12мб.
+
 Полный тутор по корграфике.
 [https://habr.com/ru/post/309506/]
 
@@ -2428,17 +2519,6 @@ System events: (low memory, rotation, etc...)
 - [ ]	**Какие типы нотификаций есть в iOS?**
 
 
-
----
-- [ ]	**Как работают push нотификации?**
-
-iOS-приложения не могут долгое время находиться в фоновом режиме. В целях сохранения заряда батареи приложениям, работающим в фоне, разрешено выполнять ограниченный набор действий. Вместо того, чтобы беспрерывно проверять события или производить какие-либо действия в фоновом режиме, вы можете создать серверную сторону приложения, которая будет выполнять эти действия. А когда наступит интересующее событие, серверная сторона сможет отправить приложению push-уведомление. Абсолютно любое push-уведомление может выполнять следующие три действия:
-
-- Показать короткое текстовое сообщение.
-- Воспроизвести короткий звуковой сигнал.
-- Установить число на бейдже иконки приложения.
-
-![image](https://github.com/sashakid/ios-guide/raw/master/Images/apns.png)
 
 ---
 - [ ]	**Какие ограничение есть у платформы iOS?**
@@ -3413,6 +3493,29 @@ private override init() {}
 | Использование абстрактной фабрики для создания экземпляра класса  | Возможно  | Невозможно по причине осутствия самой возможности создания экземпляра |
 | Сериализация | Возможно  | Неприменима по причине отсутствия экземпляра |
 
+
+**Использование синглотона оправдано, когда:**
+Необходимо наследование классов или интерфейсов или делегаровать конструирование объектов фабрике
+Необходимо использование экземпляров класса
+Необходимо контролировать время жизни объекта (хоть это и очень редкая задача для синглтона)
+Необходимо сериализовать объект (такая задача гипотетически возможна, но трудно представить себе сценарии использования)
+
+**Использование статических классов целесообразно тогда**
+когда у вас нет необходимости реализовывать ни один из сценариев перечисленных для синглтона.
+Основное назначение статических классов все-таки в группировке логически схожих методов, констант, полей и свойств. Например: System.Math, System.BitConverter, System.Buffer, System.Convert и т.д.
+
+
+**Статический класс**
+Статический класс - это обычный контейнер для наборов методов, работающий на входных параметрах и не должен возвращать или устанавливать каких-либо внутренных полей экземпляра.
+
+Содержит только статические методы.
+Нельзя создавать его экземпляры.
+Не может содержать конструкторов/деструкторов экземпляра.
+**Синглтон**
+Один из порождающих паттернов. Гарантирует, что у класса есть только один экземпляр, и предоставляет к нему глобальную точку доступа.
+
+Синглтоны бывают потокобезопасные или нет.
+C простой или отложенной инициализацией.
 
 #### Git
 ---
@@ -6134,6 +6237,466 @@ Label2.backgroundColor = [UIColor redColor];
 
 
 ---
-- [x] **
+- [x] **Фундаментальные, расширенные типы и типы коллекций?**
+
+Фундаментальными типами в Swift - называют: Int, Float, Double, Bool.
+
+Расширенные типы: Кортежи (tuples)
+
+Типы коллекций: Array, Dictionary, Set.
+
+Опциональные типы: это типы которые могу работать с отсутствующими значениями.
+
+
+
+---
+- [x] **Weak vs assign, strong vs copy?**
+
+**В чем отличие strong и copy у ccылки на объект NSString?**
+Владение объектом
+
+strong - это просто ссылка (если где-то измениться то он тоже измениться). Например strong NSString obj1 может быть ссылкой на NSMutableString obj2 и obj1 будет меняться, если измениться obj2.
+
+copy - это новый объект (поэтому должен быть реализован протокол копирования чтобы создать копию объекта).
+
+---
+- [x] **Как добавить свойство в существующий объект с закрытой реализацией через runtime?**
+
+Добавляем свойство в GMSPlace. Добавляем shortAddress через runtime.
+```
+#import <GoogleMaps/GoogleMaps.h>
+
+@interface GMSPlace (Category)
+@property (strong, nonatomic) NSString *shortAddress;
+
+@end
+```
+```
+#import "GMSPlace+Category.h"
+#import <objc/runtime.h>
+
+@implementation GMSPlace (Category)
+
+- (NSString*) shortAddress {
+    return objc_getAssociatedObject(self, @selector(shortAddress));
+}
+
+- (void)setShortAddress:(NSString *)shortAddress {
+    objc_setAssociatedObject(self, @selector(shortAddress), shortAddress, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+```
+
+---
+- [x] **Google Places.**
+
+Get places by current coordinate
+```
+- (void)getNearbyPlaces
+{
+   [self.placesClient currentPlaceWithCallback:^(GMSPlaceLikelihoodList * _Nullable likelihoodList, NSError * _Nullable error) {
+       
+   if (error != nil) {
+        NSLog(@"Current Place error %@", [error localizedDescription]);
+        return;   
+   }
+       
+   for (GMSPlaceLikelihood *likelihood in likelihoodList.likelihoods) {
+         GMSPlace* place = likelihood.place;
+         NSLog(@"Current Place name %@ at likelihood %g", place.name, likelihood.likelihood);
+         NSLog(@"Current Place address %@", place.formattedAddress);
+         NSLog(@"Current Place attributions %@", place.attributions);
+         NSLog(@"Current PlaceID %@", place.placeID);
+   }
+       
+   NSLog(@"likelihoodList = %@", likelihoodList);
+   }];
+}
+self.placesClient = [GMSPlacesClient sharedClient];
+```
+
+---
+- [x] **Синтаксис с подчеркиванием и dot notation для обращения к свойства?**
+
+**Когда и что использовать?**
+Для работы со свойствами - используем dot notation синтаксис (это единство подхода).
+
+При переопределении setter/getter и внутри init-метода - используем синтаксис с подчеркиванием. 
+(чтобы избежать зацикливания - рекурсии вызовов).
+
+---
+- [x] **Что такое тип id?**
+
+id - это указатель на любой НЕПРИМИТИВНЫЙ объект. В ARC нельзя сконвертировать примитив в id.
+
+
+**Разница между NSObject и id?**
+
+Все непримитивные объекты являются типом id. 
+Типу id можно посылать какие угодно сообщения. 
+Объекту NSObject можно посылать только декларированые у него сообщения.
+Явное указание типа объекта помогает компилятору искать нужные методы и разрешать неоднозначности.
+
+**Что случится во время компиляции если мы посылаем сообщение объекту типа id?**
+Выполнит соответствуюший метод, если найдёт, иначе выбросит исключение.
+
+
+---
+- [x] **Что такое быстрое перечисление?**
+```
+Итерация (цикл) по коллекциям (NSArray, NSDictionary): 
+for Type *item in Collection {}
+```
+
+---
+- [x] **Bar Button Style**
+
+
+```
+//Bar Button Style
+[[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UINavigationBar class]]] 
+setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor whiteColor],
+NSFontAttributeName: [UIFont systemFontOfSize:15.0]} forState:UIControlStateNormal];
+```
+
+
+
+---
+- [x] **Формальный и неформальный протокол**
+
+Неформальный протокол - категория над NSObject, которая заставляет все объекты 
+адаптировать этот протокол. 
+
+Формальный - обычный протокол @protocol
+
+---
+- [x] **Порождающие паттерны (creational patterns)?**
+
+Абстрактная фабрика (abstract factory): абстрактный класс, который предоставляет интерфейс для создания объекта. Программист должен наследоваться от него и переопределять его методы (реализовать интерфейс абстрактной фабрики).
+
+В Objective-C паттерн реализуется через
+
+Протокол с необходимыми методами.
+Классы реализующие этот протокол.
+Класс, возвращающий объект id в зависимости от аргумента.
+Class factory method - combine allocation and initialization in one step and return the created object.
+
+
+
+---
+- [x] **Какие паттерны еще знаете? Классификация паттернов?**
+
+**Паттерны порождающие (creational patterns)
+
+
+Абстрактная фабрика (Abstract factory)
+Строитель (Builder)
+Фабричнй метод (Fabric method)
+Ленивая инициализация (Lazy initialization)
+Объектный пул (Object pool)
+Одиночка (Singleton)
+
+**Паттерны структурные (structural patterns)
+
+
+MVC
+Декоратор (Decorator: Categories, Delegation)
+Адаптер (Adapter: Delegation)
+Фасад (Facade)
+Компоновщик (Composite)
+
+**Паттерны поведения (behavioral patterns)
+
+
+Наблюдатель (Observer: Notification)
+KVO (key-value observing)
+Хранитель (Memento: UserDefaults)
+Цепочка обязанностей (Chain of Responsibility)
+Команда (Command: Target-Action mechanism)
+
+
+---
+- [x] **Как пересоздать синглтон? Можно ли обнулить объект синглтона?**
+
+Possible to set singleton back to nil?
+My question is: is it possible to set this object back to nil, so that on a later called to [MySingleton sharedInstance] the object gets re-initialised?
+Your assumption about the local reference is correct, it won't affect your singleton.
+
+To be able to reinitialize the singleton you need to move the static variable out of your method, so it's accessible by the whole class.
+```
+static MySingleton *sharedInstance = nil;
+// Get the shared instance and create it if necessary.
++ (MySingleton *)sharedInstance {
+    if (sharedInstance == nil) {
+        sharedInstance = [[MySingleton alloc] init];
+    }
+    return sharedInstance;
+}
+
++ (void)resetSharedInstance {
+    sharedInstance = nil;
+}
+```
+Note that you cannot use dispatch_once anymore, since your singleton needs obviously to be created multiple times. If you only ever call this singleton from your UI (and therefore only from the main thread), then the sample above is fine.
+
+If you need access from multiple threads you need to put a lock around the +sharedInstance and +resetSharedInstance method, e.g.
+```
++ (id)sharedInstance {
+    @synchronized(self) {
+        if (sharedInstance == nil) {
+            sharedInstance = [[MySingleton alloc] init];
+        }
+        return sharedInstance;
+    }
+}
+
++ (void)resetSharedInstance {
+    @synchronized(self) {
+        sharedInstance = nil;
+    }
+}
+```
+This is quite a bit slower than the dispatch_once variant, but in practice it won't matter usually.
+
+
+
+---
+- [x] **Реализация синглтона (Singleton) в ARC и в non-ARC?**
+
+Singleton - порождающий шаблон, который гарантирует, что в однопоточном приложении будет единственный экземпляр класса
+с глобальной точкой доступа. 
+
+Может последовать вопрос: "Почему бы не использовать статические методы класса?" Ответ: Статические методы класса не дают
+широкую функциональность в отличие от единственного объекта класса. Кроме того, в будущем может понадобится несколько объектов.
+
+Реализация без ARC.
+```
++ (Singleton *)sharedInstance {
+  static Singleton *sharedInstance = nil;
+  @synchronized(self) {
+      if (!sharedInstance) {
+          sharedInstance = [[Singleton alloc] init];
+      }
+  }
+  return sharedInstance;
+}
+```
+Реализация с помощью ARC:
+```
++ (Singleton *)sharedInstance {
+    static dispatch_once_t pred;
+    static Singleton *sharedInstance = nil;
+    
+    dispatch_once(&pred, ^{ sharedInstance = [self alloc] init]; });
+    return sharedInstance;
+}
+```
+
+---
+- [x] **Referance Counting - is not garbare collector.**
+
+**Как работает сборщик мусора (garbage collector)?**
+
+Когда вы хотите создать объект но нет места в сегменте Памяти. JVM( Java Virtual Machine) проводит Garbase Collection, JVM ищет в памяти все объекты, которые более не нужны и избавляется от них. Автоматически заботиться об неиспользуемых объектах.
+
+Reference Counting - ненужный объект сразу освобождается из памяти. Это одна из техник - Memory Management. (Управления памятью).
+
+Carbage Collector - ненужный объект освобождается later (позже).
+
+Reference Counting - predictable (предсказуемый), эта техника работы с памятью лучше чем Carbage Collector. Carbage Collector может влиять на производительность программы когда разом проходит по всем объектом и освобождает из памяти ненужные.
+
+**Weak. Nonatomic. Потокобезопасность.**
+
+Weak pointer - если объект не пометили как strong то объекту устанавливается nil и освобождает память.
+
+You can send messages to nil pointer. return zero. В Objective-C не нужно использовать большой цепочки if-else для проверки на нуль.
+
+nonatomic - setter and getter которые синтезируются у объекта is not thread-safe (непотокобезопасны).
+
+Потокобезопасность - это когда оба потока пытаются изменить объект, нужно приостанавливать один поток, пока незавершился первый.
+
+
+---
+- [x] **Внутренние компоненты iOS платформы? Из чего состоит iOS платформа?**
+```
+Core OS (OSXKernel, Mach etc)
+Core Services (Foundation, Networking etc)
+Media (Core Audio, OpenAL, Quartz, Core Animation etc)
+Cocoa Touch (UIKit, Camera, Controls, MapKit etc)
+```
+**Core OS:**
+Все что связано с ОС Unix.
+
+(OSXKernel, Mach 3.0, BSD, Sockets, Security, Power Management, Keychain Access, Certificates, File System, Bonjour).
+
+OSXKernel, BSD, Mach - Unix operating system on device.
+
+Эти API на С.
+
+**Core Service:**
+Foundation и сервисы.
+
+(Collections, Address Book, Networking, File Access, SQLite, Core Location, Net Services, Threading, Preferences, URL Utilities).
+
+**Media:**
+Аудио, Видео и Графика
+
+(Core Audio, OpenAL, Audio Recording, Video Playback, Quartz (2D), Core Animation, OpenGL ES, PDF)
+
+**Cocoa Touch:**
+Все что связано с UI.
+
+UIKit, Multi-Touch, Core Motion, View Hierarchy, Localization, Controls, Alerts, Web View, Map Kit, Image Picker, Camera
+
+**Внешние компоненты iOS платформы?**
+Tools (Xcode, Debugger, Source Control, Static Analyzer).
+Language (Objective-C)
+Frameworks (CoreData, UIKit, Foundation etc.)
+Design Patterns (MVC)
+
+Tools:
+---
+
+`Xcode` - Debugger, UI building, Source code editing and control.
+
+`Instruments` - Profiling, Memory Usage.
+
+Language:
+---
+
+`Objective-C`
+
+`Swift`
+
+`C`
+
+Frameworks:
+---
+
+Foundation, UIKit, Core Motion, Core Data, Map Kit etc.
+
+Design Strategies:
+---
+
+MVC.
+
+
+---
+- [x] **Когда происходит мульти-удаление при нажатии backspace на клавиатуре.**
+
+Multiline backspace in UITextField
+```
+NSRange textFieldRange = NSMakeRange(0, [textField.text length]);
+    if (NSEqualRanges(range, textFieldRange) && [string length] == 0) {
+        // Game on: when you return YES from this, your field will be empty
+        
+        DLog(@"EMPTY");
+        
+        self.necessaryLabel.text = @"30";
+        self.nameTextField.text = @"";
+        return NO;
+    }
+```
+
+---
+- [x] **При нажатии на ячейку - не подсвечиваем ее (отображаем прозрачный фон)**
+```
+//Selection Background у Cell
+UIImage *selectionBackground = [UIImage imageWithUIColor:[UIColor clearColor]];
+UIImageView *bgview=[[UIImageView alloc] initWithImage:selectionBackground];
+cell.selectedBackgroundView=bgview;
+```
+
+---
+- [x] **Как внутри контроллера отслеживать размеры keyboard - чтобы подстраивать tableview.**
+```
+- (void) addKeyboardObserver {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil]; //nil - означает что observer-им всех
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHidden:) name:UIKeyboardWillHideNotification object:nil];
+}
+```
+```
+- (void)keyboardWillShow:(NSNotification*)notification {
+    DLog(@"%@", [notification userInfo]);
+}
+
+- (void)keyboardDidShow:(NSNotification*)notification {
+    DLog(@"%@", [notification userInfo]);
+}
+
+- (void)keyboardHidden:(NSNotification*)notification {
+    DLog(@"%@", [notification userInfo]);
+}
+```
+```
+2016-02-04 14:54:28.684 PartyPlace[9684:3474492] -[IGSProfileAboutCell keyboardWillShow:](0x138c0dd00) {
+    UIKeyboardAnimationCurveUserInfoKey = 7;
+    UIKeyboardAnimationDurationUserInfoKey = 0;
+    UIKeyboardBoundsUserInfoKey = "NSRect: {{0, 0}, {320, 253}}";
+    UIKeyboardCenterBeginUserInfoKey = "NSPoint: {160, 456}";
+    UIKeyboardCenterEndUserInfoKey = "NSPoint: {160, 441.5}";
+    UIKeyboardFrameBeginUserInfoKey = "NSRect: {{0, 344}, {320, 224}}";
+    UIKeyboardFrameEndUserInfoKey = "NSRect: {{0, 315}, {320, 253}}";
+    UIKeyboardIsLocalUserInfoKey = 1;
+}
+```
+
+---
+- [x] **Реагирование на клавиатуру в custom tableview**
+
+Probably it was some sort of my mistake because of me messing with autolayouts and storyboard but I found an answer.
+
+You have to take care of this little guy in View Controller's Attribute Inspector asvi
+
+It must be unchecked so the default contentInset wouldn't be set after any change. After that it is just adding one-liner to viewDidLoad:
+```
+[self.tableView setContentInset:UIEdgeInsetsMake(108, 0, 0, 0)]; // 108 is only example
+```
+Adjust Scroll View Insets
+![image](https://camo.githubusercontent.com/efebb50bf47cef080046e3f94b041d5629d5c683/687474703a2f2f692e737461636b2e696d6775722e636f6d2f6d336874732e706e67)
+
+---
+- [x] **Как узнать индекс у таббара.**
+
+do you have UITabbar or UITabbarController?
+
+if UITabbar then set tag for each item and then you see which item is selected using -
+```
+self.tabBarController.tabBar.selectedItem.tag
+```
+if UITabbarController then use
+```
+self.tabBarController.selectedIndex
+```
+
+---
+- [x] **Предиктивный набор (Предсказательный)**
+
+You may disable the keyboard suggestions / autocomplete / QuickType for a UITextView which can block the text on smaller screens like the 4S as shown in this example
+
+with the following line:
+```
+myTextView.autocorrectionType = UITextAutocorrectionTypeNo;
+```
+enter image description here enter image description here
+
+And further if youd like to do this only on a specific screen such as targeting the 4S
+```
+if([[UIDevice currentDevice]userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+    CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+    if (screenHeight == 568) {
+        // iphone 5 screen
+    }
+    else if (screenHeight < 568) {
+       // smaller than iphone 5 screen thus 4s
+    }
+}
+```
+![image](https://camo.githubusercontent.com/e888bb666f1686da3f17c8e083ccac4c9f82707c/687474703a2f2f692e737461636b2e696d6775722e636f6d2f72304b326b2e706e67)
+
+
 
 
