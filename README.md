@@ -5906,18 +5906,102 @@ git checkout <branch> -- <path> извлекает файлы из другой 
 
 
 ---
-- [ ] **В какой момент autolayout изменяет frame у UIView.**
+- [x] **В какой момент autolayout изменяет frame у UIView.**
+
+Forget that the frame property exists. Never set it directly. A view’s frame is the result of the Auto Layout process, not an input variable. To change the frame, change the constraints. This forces you to change the way you think about your UI. Rather than thinking in positions and sizes, think of the rules that specify a each view’s positioning in relation to its siblings and parents. It’s not unlike CSS.
+
+[https://oleb.net/blog/2013/03/things-you-need-to-know-about-cocoa-autolayout/]
 
 
 ---
-- [ ] **Как работают связи в CoreData. Чем отличаются No action, Nullify, Cascade, Deny?**
+- [ ] **Как работают связи (relationships) в CoreData. Чем отличаются No action, Nullify, Cascade, Deny(удаление)?**
 
+For the purposes of this tutorial, I have created a simple project with Core Data Entities that will handle both One-To-One and One-To-Many relationships.
+
+There are 3 Entities created in the example:
+
+Person - this will be the main entity, that will have relationships with the Phone and Friends entities.
+Phone - an entity that will keep the Person’s mobile phone information. It will be used as a One-To-One relationship, assuming that the Person has only one phone.
+Friends - an entity that will keep all the Person’s friends. It will be used as a One-To-Many relationship, assuming that the person has more than one friend.
+
+![image](https://cdn-images-1.medium.com/max/800/1*KmbyBDJ7i8rJ6gSkTyheRg.png)
+
+As you can see in the above screenshot, I have already created the relationships. I will now explain to you how to that properly (it’s quite straightforward).👇
+
+One-To-One Relationship (Person -> Phone)
+If you have created the Entities we can proceed with creating the relationship between Person and Phone. You will need to add 3 values in order to create a relationship.
+
+Relationship - name your relationship.
+Destination - add the entity you want to establish a relationship with (in our case Phone).
+Inverse - create an inverse relationship from Phone and pick it under Person. Apple recommends that you always add an inverse value, so never leave this empty.
+
+![gif](https://cdn-images-1.medium.com/max/800/1*lyRZO4ll1jxynOJA-XGONQ.gif)
+![gif](https://cdn-images-1.medium.com/max/800/1*0XV1pTdP4TiEiJPRlJFSrQ.gif)
+
+Code
+Each Entity contains its own automatically generated NSManagedObject that you can work within the code. This is one of the advantages of Core Data before others.
+
+Here is an example how you can write in Person and its One-To-One Relationship (Phone).👇
+
+```
+
+let context = persistentContainer.viewContext
+
+let person = Person(context: context)
+person.firstName = "John"
+person.lastName = "Doe"
+        
+let phone = Phone(context: context)
+phone.brand = "Apple"
+phone.model = "iPhone X"
+phone.os = "iOS"
+person.phone = phone
+        
+saveContext()
+```
+
+One-To-Many Relationship (Person -> Friends)
+I hope that by far you understood how relationships work. Now we will go further and create a One-To-Many relationship. The concept is the same as the One-To-One relationship, just with some minor changes.
+
+When creating a One-To-Many relationship, you will have to change the type to To Many from the Data Model Inspector. This isn’t the case with One-To-One because this type is set to To One by default.
+
+![gif](https://cdn-images-1.medium.com/max/800/1*p9fOxbXPLgvWCr_yo5mEDw.gif)
+
+Code
+Here is an example how you can write in Person and its One-To-Many Relationship (Friends).👇
+```
+let context = persistentContainer.viewContext
+
+let person = Person(context: context)
+person.firstName = "John"
+person.lastName = "Doe"
+        
+let friend1 = Friends(context: context)
+friend1.firstName = "Friend"
+friend1.lastName = "One"
+person.addToFriends(friend1)
+        
+let friend2 = Friends(context: context)
+friend2.firstName = "Friend"
+friend2.lastName = "Two"
+person.addToFriends(friend2)
+
+saveContext()
+```
+The NSManagedObject contains generic methods like addToFriends() where you can pass either a Friends object or an array of Friends.
+``
+NOTE: The code that you saw in this tutorial is written in the AppDelegate for simplicity and to provide faster tests, due to the predefined context and Core Data save method.
+``
+
+Отвечая на вопрос, это все способы удаления, разницы почти нету.
 
 ---
-- [ ] **Как сохранить данные таким образом, чтобы они сохранились после удаления приложения?**
+- [x] **Как сохранить данные таким образом, чтобы они сохранились после удаления приложения?**
 
+Keychain может сохранить все данные после удаления, не смотря на то что это используется для сохранения паролей ;)
 
 ---
-- [ ] **В каком потоке приходит нотификация - в котором отправили, или в котором подписались?**
+- [x] **В каком потоке приходит нотификация - в котором отправили, или в котором подписались?**
 
+В котором отправили.
 
